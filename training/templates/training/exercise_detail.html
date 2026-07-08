@@ -1,0 +1,18 @@
+{% extends "training/base.html" %}
+
+{% block title %}{{ exercise.name }} | Gym Tracker{% endblock %}
+
+{% block content %}
+<h1 class="mb-3">{{ exercise.name }}</h1>
+
+<dl class="row">
+  <dt class="col-sm-3">Muscle group</dt>
+  <dd class="col-sm-9">{{ exercise.muscle_group.name }}</dd>
+  <dt class="col-sm-3">Equipment</dt>
+  <dd class="col-sm-9">{{ exercise.equipment|default:"-" }}</dd>
+  <dt class="col-sm-3">Difficulty</dt>
+  <dd class="col-sm-9">{{ exercise.get_difficulty_display }}</dd>
+  <dt class="col-sm-3">Description</dt>
+  <dd class="col-sm-9">{{ exercise.description|default:"No description." }}</dd>
+</dl>
+{% endblock %}
