@@ -2,7 +2,7 @@ from decimal import Decimal
 
 from django.test import TestCase
 
-from .models import (
+from training.models import (
     Atleta,
     Exercicio,
     FichaDeTreino,
@@ -82,5 +82,3 @@ class TrainingModelTests(TestCase):
         self.assertEqual(self.exercise.workout_items.count(), 1)
         self.assertIn(self.exercise, self.workout_plan.exercises.all())
         self.assertIn(self.workout_plan, self.exercise.workout_plans.all())
-
-# Create your tests here.
