@@ -58,7 +58,18 @@ class CoreViewTestData(TestCase):
         )
 
 
-@unittest.skip("Core list views and URLs will be implemented in the CRUD phase.")
+class HomeViewTests(CoreViewTestData):
+    def test_home_dashboard_shows_model_counts(self):
+        response = self.client.get(reverse("training:home"))
+
+        self.assertEqual(response.status_code, 200)
+        self.assertContains(response, "Athletes")
+        self.assertContains(response, "Muscle groups")
+        self.assertContains(response, "Exercises")
+        self.assertContains(response, "Workout plans")
+        self.assertContains(response, "2")
+
+
 class CoreListViewTests(CoreViewTestData):
     def test_muscle_group_list_view(self):
         self.client.force_login(self.athlete)
@@ -90,12 +101,11 @@ class CoreListViewTests(CoreViewTestData):
         self.assertContains(response, self.workout_plan.name)
 
 
-@unittest.skip("Core detail views and URLs will be implemented in the CRUD phase.")
 class CoreDetailViewTests(CoreViewTestData):
     def test_muscle_group_detail_view(self):
         self.client.force_login(self.athlete)
         response = self.client.get(
-            reverse("training:muscle-group-detail", kwargs={"slug": self.muscle_group.slug})
+            reverse("training:muscle-group-detail", kwargs={"pk": self.muscle_group.pk})
         )
 
         self.assertEqual(response.status_code, 200)
@@ -105,7 +115,7 @@ class CoreDetailViewTests(CoreViewTestData):
     def test_exercise_detail_view(self):
         self.client.force_login(self.athlete)
         response = self.client.get(
-            reverse("training:exercise-detail", kwargs={"slug": self.exercise.slug})
+            reverse("training:exercise-detail", kwargs={"pk": self.exercise.pk})
         )
 
         self.assertEqual(response.status_code, 200)
@@ -130,6 +140,10 @@ class CoreDetailViewTests(CoreViewTestData):
         self.assertEqual(response.status_code, 200)
         self.assertContains(response, self.workout_plan.name)
         self.assertContains(response, self.exercise.name)
+        self.assertContains(response, "4")
+        self.assertContains(response, "10")
+        self.assertContains(response, "45.00")
+        self.assertContains(response, "90s")
 
 
 @unittest.skip("CRUD views and URLs will be implemented in the CRUD phase.")
@@ -275,7 +289,6 @@ class AuthenticationRequiredViewTests(CoreViewTestData):
                 self.assertIn("/login", response["Location"])
 
 
-@unittest.skip("Search behavior will be implemented with the list views.")
 class SearchViewTests(CoreViewTestData):
     def test_search_exercises_by_name(self):
         self.client.force_login(self.athlete)
