@@ -1,24 +1,21 @@
 # Gym Tracker - Database ER Diagram
 
-Este documento descreve o diagrama ER planejado para o banco de dados do projeto Gym Tracker.
+Este documento descreve o diagrama ER implementado para o banco de dados do projeto Gym Tracker.
 
-O objetivo e registrar a estrutura esperada dos modelos antes da implementacao em Django, garantindo que o PR de modelagem tenha uma referencia clara para revisao.
-
-## Contexto da atividade
-
-- O projeto precisa ter pelo menos 4 modelos.
-- Um modelo precisa herdar de `AbstractUser`.
-- O projeto precisa ter relacionamentos entre modelos.
-- O diagrama da estrutura do banco precisa ser anexado ao PR.
-- Nesta etapa, nenhum arquivo `models.py`, migration ou view deve ser alterado.
+O diagrama acompanha a modelagem inicial criada em Django para atender as regras da atividade: pelo menos 4 modelos, um usuario customizado herdando de `AbstractUser`, relacionamentos `ForeignKey` e relacionamento muitos-para-muitos representado por modelo intermediario.
 
 ## Modelos
 
 ### Atleta
 
-Representa o usuario principal do sistema.
+Representa o usuario principal do sistema e herda de `AbstractUser`.
 
-`Atleta` deve herdar de `AbstractUser` para aproveitar a autenticacao nativa do Django, incluindo login, senha, status de usuario, acesso ao admin e permissoes basicas.
+Campos adicionais implementados:
+
+- `birth_date`
+- `height`
+- `weight`
+- `goal`
 
 Relacionamento principal:
 
@@ -28,15 +25,13 @@ Relacionamento principal:
 
 Representa uma categoria anatomica usada para organizar exercicios.
 
-Exemplos:
+Campos implementados:
 
-- Peito.
-- Costas.
-- Pernas.
-- Ombros.
-- Biceps.
-- Triceps.
-- Abdomen.
+- `name`
+- `description`
+- `slug`
+- `created_at`
+- `updated_at`
 
 Relacionamento principal:
 
@@ -46,12 +41,14 @@ Relacionamento principal:
 
 Representa um exercicio do catalogo do sistema.
 
-Exemplos:
+Campos implementados:
 
-- Supino reto.
-- Agachamento.
-- Remada baixa.
-- Desenvolvimento.
+- `name`
+- `description`
+- `equipment`
+- `difficulty`
+- `muscle_group`
+- `slug`
 
 Relacionamentos principais:
 
@@ -62,28 +59,37 @@ Relacionamentos principais:
 
 Representa um plano de treino associado a um atleta.
 
-Uma ficha pode conter varios exercicios, mas essa relacao precisa guardar detalhes especificos, como ordem, series, repeticoes, carga e observacoes.
+Campos implementados:
+
+- `name`
+- `athlete`
+- `objective`
+- `notes`
+- `exercises`
+- `created_at`
+- `updated_at`
 
 Relacionamentos principais:
 
 - Uma `FichaDeTreino` pertence a um `Atleta`.
 - Uma `FichaDeTreino` possui varios `ItemFichaDeTreino`.
-- Uma `FichaDeTreino` se relaciona com varios `Exercicio` por meio de `ItemFichaDeTreino`.
+- Uma `FichaDeTreino` possui varios `Exercicio` por meio de `ItemFichaDeTreino`.
 
 ### ItemFichaDeTreino
 
-Representa o item intermediario entre `FichaDeTreino` e `Exercicio`.
+Representa o modelo intermediario entre `FichaDeTreino` e `Exercicio`.
 
-Esse modelo existe porque a relacao entre ficha e exercicio precisa guardar dados proprios da prescricao do treino.
+Esse modelo guarda os dados especificos da prescricao do exercicio dentro de uma ficha.
 
-Exemplos de dados do item:
+Campos implementados:
 
-- Ordem do exercicio na ficha.
-- Numero de series.
-- Repeticoes.
-- Carga sugerida.
-- Tempo de descanso.
-- Observacoes.
+- `workout_plan`
+- `exercise`
+- `sets`
+- `reps`
+- `load`
+- `rest_seconds`
+- `order`
 
 Relacionamentos principais:
 
@@ -92,25 +98,25 @@ Relacionamentos principais:
 
 ## Relacionamentos
 
-Relacionamentos planejados:
+Relacionamentos implementados:
 
 - `Atleta` 1:N `FichaDeTreino`.
 - `GrupoMuscular` 1:N `Exercicio`.
 - `FichaDeTreino` 1:N `ItemFichaDeTreino`.
 - `Exercicio` 1:N `ItemFichaDeTreino`.
-- `FichaDeTreino` e `Exercicio` possuem relacao N:N representada por `ItemFichaDeTreino`.
+- `FichaDeTreino` e `Exercicio` possuem relacao N:N por meio de `ItemFichaDeTreino`.
 
 ## Mermaid ER
 
 ```mermaid
 erDiagram
-    ATLETA ||--o{ FICHA_DE_TREINO : possui
-    GRUPO_MUSCULAR ||--o{ EXERCICIO : classifica
-    FICHA_DE_TREINO ||--o{ ITEM_FICHA_DE_TREINO : contem
-    EXERCICIO ||--o{ ITEM_FICHA_DE_TREINO : usado_em
+    ATLETA ||--o{ FICHA_DE_TREINO : owns
+    GRUPO_MUSCULAR ||--o{ EXERCICIO : classifies
+    FICHA_DE_TREINO ||--o{ ITEM_FICHA_DE_TREINO : contains
+    EXERCICIO ||--o{ ITEM_FICHA_DE_TREINO : appears_in
 
     ATLETA {
-        int id PK
+        bigint id PK
         string username
         string first_name
         string last_name
@@ -118,40 +124,50 @@ erDiagram
         string password
         boolean is_active
         boolean is_staff
+        date birth_date
+        decimal height
+        decimal weight
+        string goal
     }
 
     GRUPO_MUSCULAR {
-        int id PK
-        string nome
-        text descricao
+        bigint id PK
+        string name
+        text description
+        string slug
+        datetime created_at
+        datetime updated_at
     }
 
     EXERCICIO {
-        int id PK
-        string nome
-        text descricao
-        int grupo_muscular_id FK
+        bigint id PK
+        string name
+        text description
+        string equipment
+        string difficulty
+        bigint muscle_group_id FK
+        string slug
     }
 
     FICHA_DE_TREINO {
-        int id PK
-        int atleta_id FK
-        string nome
-        string objetivo
-        date data_inicio
-        boolean ativa
+        bigint id PK
+        string name
+        bigint athlete_id FK
+        string objective
+        text notes
+        datetime created_at
+        datetime updated_at
     }
 
     ITEM_FICHA_DE_TREINO {
-        int id PK
-        int ficha_id FK
-        int exercicio_id FK
-        int ordem
-        int series
-        string repeticoes
-        string carga
-        string descanso
-        text observacoes
+        bigint id PK
+        bigint workout_plan_id FK
+        bigint exercise_id FK
+        int sets
+        string reps
+        decimal load
+        int rest_seconds
+        int order
     }
 ```
 
@@ -165,16 +181,3 @@ Os arquivos visuais do diagrama estao em:
 Ao abrir o PR de modelagem, anexe o arquivo `.drawio` e a imagem PNG na descricao do PR para facilitar a revisao da estrutura do banco.
 
 Se os arquivos forem renomeados futuramente, atualize esta documentacao para manter os caminhos sincronizados.
-
-## Limites desta etapa
-
-Esta etapa cria apenas documentacao do diagrama ER.
-
-Nao deve alterar:
-
-- `models.py`
-- migrations
-- views
-- templates HTML
-- arquivos CSS
-- configuracoes Django
