@@ -1,17 +1,28 @@
 from django import forms
+from django.contrib.auth.forms import AuthenticationForm
 
 from .models import Exercicio, FichaDeTreino, GrupoMuscular, ItemFichaDeTreino
+
+
+def apply_bootstrap_classes(fields):
+    for field in fields.values():
+        widget = field.widget
+        if isinstance(widget, forms.CheckboxInput):
+            widget.attrs.setdefault("class", "form-check-input")
+        else:
+            widget.attrs.setdefault("class", "form-control")
+
+
+class BootstrapAuthenticationForm(AuthenticationForm):
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        apply_bootstrap_classes(self.fields)
 
 
 class BootstrapModelForm(forms.ModelForm):
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
-        for field in self.fields.values():
-            widget = field.widget
-            if isinstance(widget, forms.CheckboxInput):
-                widget.attrs.setdefault("class", "form-check-input")
-            else:
-                widget.attrs.setdefault("class", "form-control")
+        apply_bootstrap_classes(self.fields)
 
 
 class GrupoMuscularForm(BootstrapModelForm):

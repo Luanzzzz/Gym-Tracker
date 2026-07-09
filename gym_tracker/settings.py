@@ -120,3 +120,7 @@ STATIC_URL = "static/"
 DEFAULT_AUTO_FIELD = "django.db.models.BigAutoField"
 
 AUTH_USER_MODEL = "training.Atleta"
+
+LOGIN_URL = "login"
+LOGIN_REDIRECT_URL = "training:home"
+LOGOUT_REDIRECT_URL = "login"

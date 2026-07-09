@@ -69,6 +69,12 @@ class HomeViewTests(CoreViewTestData):
         self.assertContains(response, "Workout plans")
         self.assertContains(response, "2")
 
+    def test_login_page_is_public(self):
+        response = self.client.get(reverse("login"))
+
+        self.assertEqual(response.status_code, 200)
+        self.assertContains(response, "Login")
+
 
 class CoreListViewTests(CoreViewTestData):
     def test_muscle_group_list_view(self):
@@ -326,7 +332,6 @@ class CoreCrudViewTests(CoreViewTestData):
         self.assertFalse(ItemFichaDeTreino.objects.filter(pk=self.item.pk).exists())
 
 
-@unittest.skip("Login-required behavior will be implemented with the CRUD views.")
 class AuthenticationRequiredViewTests(CoreViewTestData):
     def test_main_routes_require_login(self):
         protected_routes = [
@@ -335,13 +340,53 @@ class AuthenticationRequiredViewTests(CoreViewTestData):
             reverse("training:athlete-list"),
             reverse("training:workout-plan-list"),
             reverse("training:workout-plan-detail", kwargs={"pk": self.workout_plan.pk}),
+            reverse("training:muscle-group-create"),
+            reverse("training:muscle-group-update", kwargs={"pk": self.muscle_group.pk}),
+            reverse("training:muscle-group-delete", kwargs={"pk": self.muscle_group.pk}),
+            reverse("training:exercise-create"),
+            reverse("training:exercise-update", kwargs={"pk": self.exercise.pk}),
+            reverse("training:exercise-delete", kwargs={"pk": self.exercise.pk}),
+            reverse("training:workout-plan-create"),
+            reverse("training:workout-plan-update", kwargs={"pk": self.workout_plan.pk}),
+            reverse("training:workout-plan-delete", kwargs={"pk": self.workout_plan.pk}),
+            reverse(
+                "training:workout-item-create",
+                kwargs={"workout_plan_pk": self.workout_plan.pk},
+            ),
+            reverse("training:workout-item-update", kwargs={"pk": self.item.pk}),
+            reverse("training:workout-item-delete", kwargs={"pk": self.item.pk}),
         ]
 
         for url in protected_routes:
             with self.subTest(url=url):
                 response = self.client.get(url)
-                self.assertEqual(response.status_code, 302)
-                self.assertIn("/login", response["Location"])
+                self.assertRedirects(response, f"{reverse('login')}?next={url}")
+
+    def test_logged_in_user_can_access_protected_list(self):
+        self.client.force_login(self.athlete)
+        response = self.client.get(reverse("training:exercise-list"))
+
+        self.assertEqual(response.status_code, 200)
+        self.assertContains(response, self.exercise.name)
+
+    def test_user_can_login_with_valid_credentials(self):
+        response = self.client.post(
+            reverse("login"),
+            {"username": "ana", "password": "test-pass"},
+        )
+
+        self.assertRedirects(response, reverse("training:home"))
+
+    def test_user_can_logout(self):
+        self.client.force_login(self.athlete)
+        response = self.client.post(reverse("logout"))
+
+        self.assertRedirects(response, reverse("login"))
+        protected_response = self.client.get(reverse("training:exercise-list"))
+        self.assertRedirects(
+            protected_response,
+            f"{reverse('login')}?next={reverse('training:exercise-list')}",
+        )
 
 
 class SearchViewTests(CoreViewTestData):
