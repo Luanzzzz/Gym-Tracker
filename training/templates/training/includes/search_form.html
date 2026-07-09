@@ -1,5 +1,6 @@
-<form method="get" class="row g-2 mb-3">
-  <div class="col-sm-9 col-md-10">
+<form method="get" class="content-card card-body mb-3">
+  <div class="row g-2 align-items-center">
+    <div class="col-sm">
     <input
       type="search"
       name="q"
@@ -7,8 +8,14 @@
       class="form-control"
       placeholder="{{ placeholder|default:'Search' }}"
     >
-  </div>
-  <div class="col-sm-3 col-md-2">
-    <button type="submit" class="btn btn-primary w-100">Search</button>
+    </div>
+    <div class="col-sm-auto">
+      <button type="submit" class="btn btn-primary w-100">Search</button>
+    </div>
+    {% if search_query %}
+      <div class="col-sm-auto">
+        <a href="{{ request.path }}" class="btn btn-outline-secondary w-100">Clear</a>
+      </div>
+    {% endif %}
   </div>
 </form>

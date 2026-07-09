@@ -3,35 +3,46 @@
 {% block title %}{{ title }} | Gym Tracker{% endblock %}
 
 {% block content %}
-<h1 class="mb-3">{{ title }}</h1>
-
-{% if workout_plan %}
-  <p class="text-muted">Workout plan: {{ workout_plan.name }}</p>
-{% endif %}
-
-<form method="post" novalidate>
-  {% csrf_token %}
-
-  {% if form.non_field_errors %}
-    <div class="alert alert-danger">{{ form.non_field_errors }}</div>
-  {% endif %}
-
-  {% for field in form %}
-    <div class="mb-3">
-      <label for="{{ field.id_for_label }}" class="form-label">{{ field.label }}</label>
-      {{ field }}
-      {% if field.help_text %}
-        <div class="form-text">{{ field.help_text }}</div>
-      {% endif %}
-      {% for error in field.errors %}
-        <div class="text-danger small">{{ error }}</div>
-      {% endfor %}
+<div class="row justify-content-center">
+  <div class="col-lg-8 col-xl-7">
+    <div class="page-heading">
+      <p class="page-kicker">Form</p>
+      <h1 class="h2 mb-0">{{ title }}</h1>
     </div>
-  {% endfor %}
 
-  <div class="d-flex gap-2">
-    <button type="submit" class="btn btn-primary">{{ submit_label|default:"Save" }}</button>
-    <a href="{{ request.META.HTTP_REFERER|default:'/' }}" class="btn btn-outline-secondary">Cancel</a>
+    <div class="content-card">
+      <div class="card-body">
+        {% if workout_plan %}
+          <p class="text-muted">Workout plan: {{ workout_plan.name }}</p>
+        {% endif %}
+
+        <form method="post" novalidate>
+          {% csrf_token %}
+
+          {% if form.non_field_errors %}
+            <div class="alert alert-danger">{{ form.non_field_errors }}</div>
+          {% endif %}
+
+          {% for field in form %}
+            <div class="mb-3">
+              <label for="{{ field.id_for_label }}" class="form-label fw-semibold">{{ field.label }}</label>
+              {{ field }}
+              {% if field.help_text %}
+                <div class="form-text">{{ field.help_text }}</div>
+              {% endif %}
+              {% for error in field.errors %}
+                <div class="text-danger small mt-1">{{ error }}</div>
+              {% endfor %}
+            </div>
+          {% endfor %}
+
+          <div class="d-flex flex-column flex-sm-row gap-2 pt-2">
+            <button type="submit" class="btn btn-primary">{{ submit_label|default:"Save" }}</button>
+            <a href="{{ request.META.HTTP_REFERER|default:'/' }}" class="btn btn-outline-secondary">Cancel</a>
+          </div>
+        </form>
+      </div>
+    </div>
   </div>
-</form>
+</div>
 {% endblock %}

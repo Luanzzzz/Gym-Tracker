@@ -3,30 +3,42 @@
 {% block title %}Muscle groups | Gym Tracker{% endblock %}
 
 {% block content %}
-<div class="d-flex justify-content-between align-items-center mb-3">
-  <h1 class="mb-0">Muscle groups</h1>
-  <a href="{% url 'training:muscle-group-create' %}" class="btn btn-primary">Create muscle group</a>
+<div class="page-heading d-flex flex-column flex-lg-row justify-content-between gap-3">
+  <div>
+    <p class="page-kicker">Exercise library</p>
+    <h1 class="h2 mb-0">Muscle groups</h1>
+  </div>
+  <a href="{% url 'training:muscle-group-create' %}" class="btn btn-primary align-self-lg-end">Create muscle group</a>
 </div>
 
 {% include "training/includes/search_form.html" with placeholder="Search muscle groups" %}
 
-<div class="row g-3">
-  {% for muscle_group in muscle_groups %}
-    <div class="col-md-6">
-      <div class="card h-100">
-        <div class="card-body">
-          <h2 class="h5">{{ muscle_group.name }}</h2>
-          <p class="text-muted">{{ muscle_group.description|default:"No description." }}</p>
-          <div class="d-flex gap-2">
-            <a href="{% url 'training:muscle-group-detail' muscle_group.pk %}" class="btn btn-sm btn-outline-primary">Details</a>
-            <a href="{% url 'training:muscle-group-update' muscle_group.pk %}" class="btn btn-sm btn-outline-secondary">Edit</a>
-            <a href="{% url 'training:muscle-group-delete' muscle_group.pk %}" class="btn btn-sm btn-outline-danger">Delete</a>
-          </div>
-        </div>
-      </div>
-    </div>
-  {% empty %}
-    <p class="text-muted">No muscle groups found.</p>
-  {% endfor %}
+<div class="content-card table-card table-responsive">
+  <table class="table table-striped table-hover align-middle">
+    <thead class="table-light">
+      <tr>
+        <th>Name</th>
+        <th>Description</th>
+        <th class="text-lg-end">Actions</th>
+      </tr>
+    </thead>
+    <tbody>
+      {% for muscle_group in muscle_groups %}
+        <tr>
+          <td class="fw-semibold">{{ muscle_group.name }}</td>
+          <td>{{ muscle_group.description|default:"No description." }}</td>
+          <td class="action-cell">
+            <div class="d-flex justify-content-lg-end gap-2 stack-mobile">
+              <a href="{% url 'training:muscle-group-detail' muscle_group.pk %}" class="btn btn-sm btn-outline-primary">View</a>
+              <a href="{% url 'training:muscle-group-update' muscle_group.pk %}" class="btn btn-sm btn-outline-secondary">Edit</a>
+              <a href="{% url 'training:muscle-group-delete' muscle_group.pk %}" class="btn btn-sm btn-outline-danger">Delete</a>
+            </div>
+          </td>
+        </tr>
+      {% empty %}
+        <tr><td colspan="3" class="empty-state">No muscle groups found.</td></tr>
+      {% endfor %}
+    </tbody>
+  </table>
 </div>
 {% endblock %}

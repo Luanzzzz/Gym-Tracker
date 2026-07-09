@@ -3,22 +3,29 @@
 {% block title %}{{ exercise.name }} | Gym Tracker{% endblock %}
 
 {% block content %}
-<div class="d-flex justify-content-between align-items-center mb-3">
-  <h1 class="mb-0">{{ exercise.name }}</h1>
-  <div class="d-flex gap-2">
+<div class="page-heading d-flex flex-column flex-lg-row justify-content-between gap-3">
+  <div>
+    <p class="page-kicker">Exercise</p>
+    <h1 class="h2 mb-0">{{ exercise.name }}</h1>
+  </div>
+  <div class="d-flex gap-2 align-self-lg-end stack-mobile">
     <a href="{% url 'training:exercise-update' exercise.pk %}" class="btn btn-outline-secondary">Edit</a>
     <a href="{% url 'training:exercise-delete' exercise.pk %}" class="btn btn-outline-danger">Delete</a>
   </div>
 </div>
 
-<dl class="row">
-  <dt class="col-sm-3">Muscle group</dt>
-  <dd class="col-sm-9">{{ exercise.muscle_group.name }}</dd>
-  <dt class="col-sm-3">Equipment</dt>
-  <dd class="col-sm-9">{{ exercise.equipment|default:"-" }}</dd>
-  <dt class="col-sm-3">Difficulty</dt>
-  <dd class="col-sm-9">{{ exercise.get_difficulty_display }}</dd>
-  <dt class="col-sm-3">Description</dt>
-  <dd class="col-sm-9">{{ exercise.description|default:"No description." }}</dd>
-</dl>
+<div class="content-card">
+  <div class="card-body">
+    <dl class="row mb-0">
+      <dt class="col-sm-3">Muscle group</dt>
+      <dd class="col-sm-9">{{ exercise.muscle_group.name }}</dd>
+      <dt class="col-sm-3">Equipment</dt>
+      <dd class="col-sm-9">{{ exercise.equipment|default:"-" }}</dd>
+      <dt class="col-sm-3">Difficulty</dt>
+      <dd class="col-sm-9"><span class="badge text-bg-light border">{{ exercise.get_difficulty_display }}</span></dd>
+      <dt class="col-sm-3">Description</dt>
+      <dd class="col-sm-9 mb-sm-0">{{ exercise.description|default:"No description." }}</dd>
+    </dl>
+  </div>
+</div>
 {% endblock %}

@@ -1,0 +1,136 @@
+:root {
+  --gt-ink: #1f2937;
+  --gt-muted: #6b7280;
+  --gt-primary: #0d6efd;
+  --gt-accent: #20c997;
+  --gt-surface: #ffffff;
+  --gt-border: #e5e7eb;
+}
+
+body {
+  color: var(--gt-ink);
+  font-family: system-ui, -apple-system, "Segoe UI", sans-serif;
+}
+
+.app-navbar {
+  background: #111827;
+  box-shadow: 0 0.5rem 1rem rgba(17, 24, 39, 0.12);
+}
+
+.brand-mark {
+  align-items: center;
+  background: var(--gt-accent);
+  border-radius: 0.4rem;
+  color: #06281f;
+  display: inline-flex;
+  font-size: 0.8rem;
+  height: 2rem;
+  justify-content: center;
+  margin-right: 0.45rem;
+  width: 2rem;
+}
+
+.page-shell {
+  width: min(100%, 1140px);
+}
+
+.page-heading {
+  margin-bottom: 1.5rem;
+}
+
+.page-kicker {
+  color: var(--gt-muted);
+  font-size: 0.95rem;
+  margin-bottom: 0.35rem;
+}
+
+.content-card,
+.metric-card {
+  background: var(--gt-surface);
+  border: 1px solid var(--gt-border);
+  border-radius: 0.5rem;
+  box-shadow: 0 0.75rem 1.75rem rgba(15, 23, 42, 0.06);
+}
+
+.metric-card {
+  height: 100%;
+  transition: transform 0.15s ease, box-shadow 0.15s ease;
+}
+
+.metric-card:hover {
+  box-shadow: 0 1rem 2rem rgba(15, 23, 42, 0.1);
+  transform: translateY(-2px);
+}
+
+.metric-icon {
+  align-items: center;
+  background: rgba(13, 110, 253, 0.1);
+  border-radius: 0.5rem;
+  color: var(--gt-primary);
+  display: inline-flex;
+  font-weight: 700;
+  height: 2.5rem;
+  justify-content: center;
+  width: 2.5rem;
+}
+
+.table-card {
+  overflow: hidden;
+}
+
+.table-card .table {
+  margin-bottom: 0;
+}
+
+.table-card thead th {
+  color: var(--gt-muted);
+  font-size: 0.78rem;
+  letter-spacing: 0;
+  text-transform: uppercase;
+}
+
+.table-card tbody td {
+  vertical-align: middle;
+}
+
+.action-cell {
+  min-width: 12rem;
+}
+
+.form-control,
+.form-select {
+  border-color: var(--gt-border);
+}
+
+.form-control:focus,
+.form-select:focus {
+  border-color: var(--gt-primary);
+  box-shadow: 0 0 0 0.2rem rgba(13, 110, 253, 0.14);
+}
+
+.btn {
+  border-radius: 0.45rem;
+}
+
+.empty-state {
+  color: var(--gt-muted);
+  padding: 2rem;
+  text-align: center;
+}
+
+.auth-card {
+  max-width: 440px;
+  width: 100%;
+}
+
+@media (max-width: 575.98px) {
+  .page-shell {
+    padding-left: 1rem;
+    padding-right: 1rem;
+  }
+
+  .action-cell .btn,
+  .stack-mobile .btn {
+    width: 100%;
+  }
+}

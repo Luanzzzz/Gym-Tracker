@@ -3,32 +3,39 @@
 {% block title %}{{ workout_plan.name }} | Gym Tracker{% endblock %}
 
 {% block content %}
-<div class="d-flex justify-content-between align-items-center mb-3">
-  <h1 class="mb-0">{{ workout_plan.name }}</h1>
-  <div class="d-flex gap-2">
+<div class="page-heading d-flex flex-column flex-lg-row justify-content-between gap-3">
+  <div>
+    <p class="page-kicker">Workout plan</p>
+    <h1 class="h2 mb-0">{{ workout_plan.name }}</h1>
+  </div>
+  <div class="d-flex gap-2 align-self-lg-end stack-mobile">
     <a href="{% url 'training:workout-plan-update' workout_plan.pk %}" class="btn btn-outline-secondary">Edit</a>
     <a href="{% url 'training:workout-plan-delete' workout_plan.pk %}" class="btn btn-outline-danger">Delete</a>
   </div>
 </div>
 
-<dl class="row">
-  <dt class="col-sm-3">Athlete</dt>
-  <dd class="col-sm-9">
-    <a href="{% url 'training:athlete-detail' workout_plan.athlete.pk %}">{{ workout_plan.athlete }}</a>
-  </dd>
-  <dt class="col-sm-3">Objective</dt>
-  <dd class="col-sm-9">{{ workout_plan.objective|default:"-" }}</dd>
-  <dt class="col-sm-3">Notes</dt>
-  <dd class="col-sm-9">{{ workout_plan.notes|default:"-" }}</dd>
-</dl>
-
-<div class="d-flex justify-content-between align-items-center mt-4 mb-2">
-  <h2 class="h4 mb-0">Workout items</h2>
-  <a href="{% url 'training:workout-item-create' workout_plan.pk %}" class="btn btn-sm btn-primary">Add item</a>
+<div class="content-card mb-3">
+  <div class="card-body">
+    <dl class="row mb-0">
+      <dt class="col-sm-3">Athlete</dt>
+      <dd class="col-sm-9">
+        <a href="{% url 'training:athlete-detail' workout_plan.athlete.pk %}">{{ workout_plan.athlete }}</a>
+      </dd>
+      <dt class="col-sm-3">Objective</dt>
+      <dd class="col-sm-9">{{ workout_plan.objective|default:"-" }}</dd>
+      <dt class="col-sm-3">Notes</dt>
+      <dd class="col-sm-9 mb-sm-0">{{ workout_plan.notes|default:"-" }}</dd>
+    </dl>
+  </div>
 </div>
-<div class="table-responsive">
+
+<div class="d-flex flex-column flex-lg-row justify-content-between gap-2 mb-2">
+  <h2 class="h4 mb-0">Workout items</h2>
+  <a href="{% url 'training:workout-item-create' workout_plan.pk %}" class="btn btn-sm btn-primary align-self-lg-end">Add item</a>
+</div>
+<div class="content-card table-card table-responsive">
   <table class="table table-striped table-hover align-middle">
-    <thead>
+    <thead class="table-light">
       <tr>
         <th>Order</th>
         <th>Exercise</th>
@@ -36,7 +43,7 @@
         <th>Reps</th>
         <th>Load</th>
         <th>Rest</th>
-        <th></th>
+        <th class="text-lg-end">Actions</th>
       </tr>
     </thead>
     <tbody>
@@ -48,15 +55,15 @@
           <td>{{ item.reps }}</td>
           <td>{{ item.load|default:"-" }}</td>
           <td>{{ item.rest_seconds }}s</td>
-          <td>
-            <div class="d-flex gap-2">
+          <td class="action-cell">
+            <div class="d-flex justify-content-lg-end gap-2 stack-mobile">
               <a href="{% url 'training:workout-item-update' item.pk %}" class="btn btn-sm btn-outline-secondary">Edit</a>
               <a href="{% url 'training:workout-item-delete' item.pk %}" class="btn btn-sm btn-outline-danger">Delete</a>
             </div>
           </td>
         </tr>
       {% empty %}
-        <tr><td colspan="7" class="text-muted">No workout items found.</td></tr>
+        <tr><td colspan="7" class="empty-state">No workout items found.</td></tr>
       {% endfor %}
     </tbody>
   </table>
