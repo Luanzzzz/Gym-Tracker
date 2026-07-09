@@ -1,4 +1,5 @@
 from django.db.models import Q
+from django.contrib.auth.mixins import LoginRequiredMixin
 from django.urls import reverse, reverse_lazy
 from django.views.generic import (
     CreateView,
@@ -54,27 +55,27 @@ class SearchQueryMixin:
         return context
 
 
-class AtletaListView(SearchQueryMixin, ListView):
+class AtletaListView(LoginRequiredMixin, SearchQueryMixin, ListView):
     model = Atleta
     template_name = "training/athlete_list.html"
     context_object_name = "athletes"
     search_fields = ("username", "first_name", "last_name")
 
 
-class AtletaDetailView(DetailView):
+class AtletaDetailView(LoginRequiredMixin, DetailView):
     model = Atleta
     template_name = "training/athlete_detail.html"
     context_object_name = "athlete"
 
 
-class GrupoMuscularListView(SearchQueryMixin, ListView):
+class GrupoMuscularListView(LoginRequiredMixin, SearchQueryMixin, ListView):
     model = GrupoMuscular
     template_name = "training/muscle_group_list.html"
     context_object_name = "muscle_groups"
     search_fields = ("name",)
 
 
-class GrupoMuscularDetailView(DetailView):
+class GrupoMuscularDetailView(LoginRequiredMixin, DetailView):
     model = GrupoMuscular
     template_name = "training/muscle_group_detail.html"
     context_object_name = "muscle_group"
@@ -83,7 +84,7 @@ class GrupoMuscularDetailView(DetailView):
         return super().get_queryset().prefetch_related("exercises")
 
 
-class GrupoMuscularCreateView(CreateView):
+class GrupoMuscularCreateView(LoginRequiredMixin, CreateView):
     model = GrupoMuscular
     form_class = GrupoMuscularForm
     template_name = "training/form.html"
@@ -91,7 +92,7 @@ class GrupoMuscularCreateView(CreateView):
     extra_context = {"title": "Create muscle group", "submit_label": "Create"}
 
 
-class GrupoMuscularUpdateView(UpdateView):
+class GrupoMuscularUpdateView(LoginRequiredMixin, UpdateView):
     model = GrupoMuscular
     form_class = GrupoMuscularForm
     template_name = "training/form.html"
@@ -99,14 +100,14 @@ class GrupoMuscularUpdateView(UpdateView):
     extra_context = {"title": "Edit muscle group", "submit_label": "Save"}
 
 
-class GrupoMuscularDeleteView(DeleteView):
+class GrupoMuscularDeleteView(LoginRequiredMixin, DeleteView):
     model = GrupoMuscular
     template_name = "training/confirm_delete.html"
     success_url = reverse_lazy("training:muscle-group-list")
     extra_context = {"title": "Delete muscle group"}
 
 
-class ExercicioListView(SearchQueryMixin, ListView):
+class ExercicioListView(LoginRequiredMixin, SearchQueryMixin, ListView):
     model = Exercicio
     template_name = "training/exercise_list.html"
     context_object_name = "exercises"
@@ -116,7 +117,7 @@ class ExercicioListView(SearchQueryMixin, ListView):
         return super().get_queryset().select_related("muscle_group")
 
 
-class ExercicioDetailView(DetailView):
+class ExercicioDetailView(LoginRequiredMixin, DetailView):
     model = Exercicio
     template_name = "training/exercise_detail.html"
     context_object_name = "exercise"
@@ -125,7 +126,7 @@ class ExercicioDetailView(DetailView):
         return super().get_queryset().select_related("muscle_group")
 
 
-class ExercicioCreateView(CreateView):
+class ExercicioCreateView(LoginRequiredMixin, CreateView):
     model = Exercicio
     form_class = ExercicioForm
     template_name = "training/form.html"
@@ -133,7 +134,7 @@ class ExercicioCreateView(CreateView):
     extra_context = {"title": "Create exercise", "submit_label": "Create"}
 
 
-class ExercicioUpdateView(UpdateView):
+class ExercicioUpdateView(LoginRequiredMixin, UpdateView):
     model = Exercicio
     form_class = ExercicioForm
     template_name = "training/form.html"
@@ -141,14 +142,14 @@ class ExercicioUpdateView(UpdateView):
     extra_context = {"title": "Edit exercise", "submit_label": "Save"}
 
 
-class ExercicioDeleteView(DeleteView):
+class ExercicioDeleteView(LoginRequiredMixin, DeleteView):
     model = Exercicio
     template_name = "training/confirm_delete.html"
     success_url = reverse_lazy("training:exercise-list")
     extra_context = {"title": "Delete exercise"}
 
 
-class FichaDeTreinoListView(SearchQueryMixin, ListView):
+class FichaDeTreinoListView(LoginRequiredMixin, SearchQueryMixin, ListView):
     model = FichaDeTreino
     template_name = "training/workout_plan_list.html"
     context_object_name = "workout_plans"
@@ -158,7 +159,7 @@ class FichaDeTreinoListView(SearchQueryMixin, ListView):
         return super().get_queryset().select_related("athlete")
 
 
-class FichaDeTreinoDetailView(DetailView):
+class FichaDeTreinoDetailView(LoginRequiredMixin, DetailView):
     model = FichaDeTreino
     template_name = "training/workout_plan_detail.html"
     context_object_name = "workout_plan"
@@ -172,7 +173,7 @@ class FichaDeTreinoDetailView(DetailView):
         )
 
 
-class FichaDeTreinoCreateView(CreateView):
+class FichaDeTreinoCreateView(LoginRequiredMixin, CreateView):
     model = FichaDeTreino
     form_class = FichaDeTreinoForm
     template_name = "training/form.html"
@@ -180,7 +181,7 @@ class FichaDeTreinoCreateView(CreateView):
     extra_context = {"title": "Create workout plan", "submit_label": "Create"}
 
 
-class FichaDeTreinoUpdateView(UpdateView):
+class FichaDeTreinoUpdateView(LoginRequiredMixin, UpdateView):
     model = FichaDeTreino
     form_class = FichaDeTreinoForm
     template_name = "training/form.html"
@@ -188,14 +189,14 @@ class FichaDeTreinoUpdateView(UpdateView):
     extra_context = {"title": "Edit workout plan", "submit_label": "Save"}
 
 
-class FichaDeTreinoDeleteView(DeleteView):
+class FichaDeTreinoDeleteView(LoginRequiredMixin, DeleteView):
     model = FichaDeTreino
     template_name = "training/confirm_delete.html"
     success_url = reverse_lazy("training:workout-plan-list")
     extra_context = {"title": "Delete workout plan"}
 
 
-class ItemFichaDeTreinoCreateView(CreateView):
+class ItemFichaDeTreinoCreateView(LoginRequiredMixin, CreateView):
     model = ItemFichaDeTreino
     form_class = ItemFichaDeTreinoForm
     template_name = "training/form.html"
@@ -218,7 +219,7 @@ class ItemFichaDeTreinoCreateView(CreateView):
         return context
 
 
-class ItemFichaDeTreinoUpdateView(UpdateView):
+class ItemFichaDeTreinoUpdateView(LoginRequiredMixin, UpdateView):
     model = ItemFichaDeTreino
     form_class = ItemFichaDeTreinoForm
     template_name = "training/form.html"
@@ -231,7 +232,7 @@ class ItemFichaDeTreinoUpdateView(UpdateView):
         )
 
 
-class ItemFichaDeTreinoDeleteView(DeleteView):
+class ItemFichaDeTreinoDeleteView(LoginRequiredMixin, DeleteView):
     model = ItemFichaDeTreino
     template_name = "training/confirm_delete.html"
     extra_context = {"title": "Delete workout item"}
