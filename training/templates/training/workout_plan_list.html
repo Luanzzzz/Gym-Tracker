@@ -3,7 +3,10 @@
 {% block title %}Workout plans | Gym Tracker{% endblock %}
 
 {% block content %}
-<h1 class="mb-3">Workout plans</h1>
+<div class="d-flex justify-content-between align-items-center mb-3">
+  <h1 class="mb-0">Workout plans</h1>
+  <a href="{% url 'training:workout-plan-create' %}" class="btn btn-primary">Create workout plan</a>
+</div>
 
 {% include "training/includes/search_form.html" with placeholder="Search workout plans" %}
 
@@ -23,7 +26,13 @@
           <td>{{ workout_plan.name }}</td>
           <td>{{ workout_plan.athlete }}</td>
           <td>{{ workout_plan.objective|default:"-" }}</td>
-          <td><a href="{% url 'training:workout-plan-detail' workout_plan.pk %}" class="btn btn-sm btn-outline-primary">Details</a></td>
+          <td>
+            <div class="d-flex gap-2">
+              <a href="{% url 'training:workout-plan-detail' workout_plan.pk %}" class="btn btn-sm btn-outline-primary">Details</a>
+              <a href="{% url 'training:workout-plan-update' workout_plan.pk %}" class="btn btn-sm btn-outline-secondary">Edit</a>
+              <a href="{% url 'training:workout-plan-delete' workout_plan.pk %}" class="btn btn-sm btn-outline-danger">Delete</a>
+            </div>
+          </td>
         </tr>
       {% empty %}
         <tr><td colspan="4" class="text-muted">No workout plans found.</td></tr>

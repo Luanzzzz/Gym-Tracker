@@ -3,7 +3,13 @@
 {% block title %}{{ exercise.name }} | Gym Tracker{% endblock %}
 
 {% block content %}
-<h1 class="mb-3">{{ exercise.name }}</h1>
+<div class="d-flex justify-content-between align-items-center mb-3">
+  <h1 class="mb-0">{{ exercise.name }}</h1>
+  <div class="d-flex gap-2">
+    <a href="{% url 'training:exercise-update' exercise.pk %}" class="btn btn-outline-secondary">Edit</a>
+    <a href="{% url 'training:exercise-delete' exercise.pk %}" class="btn btn-outline-danger">Delete</a>
+  </div>
+</div>
 
 <dl class="row">
   <dt class="col-sm-3">Muscle group</dt>

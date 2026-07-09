@@ -3,7 +3,13 @@
 {% block title %}{{ workout_plan.name }} | Gym Tracker{% endblock %}
 
 {% block content %}
-<h1 class="mb-3">{{ workout_plan.name }}</h1>
+<div class="d-flex justify-content-between align-items-center mb-3">
+  <h1 class="mb-0">{{ workout_plan.name }}</h1>
+  <div class="d-flex gap-2">
+    <a href="{% url 'training:workout-plan-update' workout_plan.pk %}" class="btn btn-outline-secondary">Edit</a>
+    <a href="{% url 'training:workout-plan-delete' workout_plan.pk %}" class="btn btn-outline-danger">Delete</a>
+  </div>
+</div>
 
 <dl class="row">
   <dt class="col-sm-3">Athlete</dt>
@@ -16,7 +22,10 @@
   <dd class="col-sm-9">{{ workout_plan.notes|default:"-" }}</dd>
 </dl>
 
-<h2 class="h4 mt-4">Workout items</h2>
+<div class="d-flex justify-content-between align-items-center mt-4 mb-2">
+  <h2 class="h4 mb-0">Workout items</h2>
+  <a href="{% url 'training:workout-item-create' workout_plan.pk %}" class="btn btn-sm btn-primary">Add item</a>
+</div>
 <div class="table-responsive">
   <table class="table table-striped table-hover align-middle">
     <thead>
@@ -27,6 +36,7 @@
         <th>Reps</th>
         <th>Load</th>
         <th>Rest</th>
+        <th></th>
       </tr>
     </thead>
     <tbody>
@@ -38,9 +48,15 @@
           <td>{{ item.reps }}</td>
           <td>{{ item.load|default:"-" }}</td>
           <td>{{ item.rest_seconds }}s</td>
+          <td>
+            <div class="d-flex gap-2">
+              <a href="{% url 'training:workout-item-update' item.pk %}" class="btn btn-sm btn-outline-secondary">Edit</a>
+              <a href="{% url 'training:workout-item-delete' item.pk %}" class="btn btn-sm btn-outline-danger">Delete</a>
+            </div>
+          </td>
         </tr>
       {% empty %}
-        <tr><td colspan="6" class="text-muted">No workout items found.</td></tr>
+        <tr><td colspan="7" class="text-muted">No workout items found.</td></tr>
       {% endfor %}
     </tbody>
   </table>
