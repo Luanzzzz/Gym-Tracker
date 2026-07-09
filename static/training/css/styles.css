@@ -82,8 +82,34 @@ body {
   margin-bottom: 0;
 }
 
+.table-card thead th {
+  color: var(--gt-muted);
+  font-size: 0.78rem;
+  letter-spacing: 0;
+  text-transform: uppercase;
+}
+
+.table-card tbody td {
+  vertical-align: middle;
+}
+
 .action-cell {
   min-width: 12rem;
+}
+
+.form-control,
+.form-select {
+  border-color: var(--gt-border);
+}
+
+.form-control:focus,
+.form-select:focus {
+  border-color: var(--gt-primary);
+  box-shadow: 0 0 0 0.2rem rgba(13, 110, 253, 0.14);
+}
+
+.btn {
+  border-radius: 0.45rem;
 }
 
 .empty-state {
