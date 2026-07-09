@@ -3,17 +3,28 @@
 {% block title %}{{ title }} | Gym Tracker{% endblock %}
 
 {% block content %}
-<h1 class="mb-3">{{ title }}</h1>
+<div class="row justify-content-center">
+  <div class="col-lg-7">
+    <div class="page-heading">
+      <p class="page-kicker">Confirmation</p>
+      <h1 class="h2 mb-0">{{ title }}</h1>
+    </div>
 
-<div class="alert alert-warning">
-  Are you sure you want to delete <strong>{{ object }}</strong>?
-</div>
+    <div class="content-card">
+      <div class="card-body">
+        <div class="alert alert-warning mb-4">
+          Are you sure you want to delete <strong>{{ object }}</strong>?
+        </div>
 
-<form method="post">
-  {% csrf_token %}
-  <div class="d-flex gap-2">
-    <button type="submit" class="btn btn-danger">Delete</button>
-    <a href="{{ request.META.HTTP_REFERER|default:'/' }}" class="btn btn-outline-secondary">Cancel</a>
+        <form method="post">
+          {% csrf_token %}
+          <div class="d-flex flex-column flex-sm-row gap-2">
+            <button type="submit" class="btn btn-danger">Delete</button>
+            <a href="{{ request.META.HTTP_REFERER|default:'/' }}" class="btn btn-outline-secondary">Cancel</a>
+          </div>
+        </form>
+      </div>
+    </div>
   </div>
-</form>
+</div>
 {% endblock %}

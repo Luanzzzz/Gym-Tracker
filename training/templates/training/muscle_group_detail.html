@@ -3,23 +3,41 @@
 {% block title %}{{ muscle_group.name }} | Gym Tracker{% endblock %}
 
 {% block content %}
-<div class="d-flex justify-content-between align-items-center mb-3">
-  <h1 class="mb-0">{{ muscle_group.name }}</h1>
-  <div class="d-flex gap-2">
+<div class="page-heading d-flex flex-column flex-lg-row justify-content-between gap-3">
+  <div>
+    <p class="page-kicker">Muscle group</p>
+    <h1 class="h2 mb-0">{{ muscle_group.name }}</h1>
+  </div>
+  <div class="d-flex gap-2 align-self-lg-end stack-mobile">
     <a href="{% url 'training:muscle-group-update' muscle_group.pk %}" class="btn btn-outline-secondary">Edit</a>
     <a href="{% url 'training:muscle-group-delete' muscle_group.pk %}" class="btn btn-outline-danger">Delete</a>
   </div>
 </div>
-<p>{{ muscle_group.description|default:"No description." }}</p>
 
-<h2 class="h4 mt-4">Exercises</h2>
-<ul class="list-group">
-  {% for exercise in muscle_group.exercises.all %}
-    <li class="list-group-item">
-      <a href="{% url 'training:exercise-detail' exercise.pk %}">{{ exercise.name }}</a>
-    </li>
-  {% empty %}
-    <li class="list-group-item text-muted">No exercises found.</li>
-  {% endfor %}
-</ul>
+<div class="row g-3">
+  <div class="col-lg-5">
+    <div class="content-card">
+      <div class="card-body">
+        <h2 class="h5">Description</h2>
+        <p class="mb-0">{{ muscle_group.description|default:"No description." }}</p>
+      </div>
+    </div>
+  </div>
+  <div class="col-lg-7">
+    <div class="content-card">
+      <div class="card-body">
+        <h2 class="h5">Exercises</h2>
+        <div class="list-group list-group-flush">
+          {% for exercise in muscle_group.exercises.all %}
+            <a href="{% url 'training:exercise-detail' exercise.pk %}" class="list-group-item list-group-item-action px-0">
+              {{ exercise.name }}
+            </a>
+          {% empty %}
+            <div class="empty-state">No exercises found.</div>
+          {% endfor %}
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
 {% endblock %}
