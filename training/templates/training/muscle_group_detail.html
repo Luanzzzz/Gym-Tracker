@@ -1,0 +1,19 @@
+{% extends "training/base.html" %}
+
+{% block title %}{{ muscle_group.name }} | Gym Tracker{% endblock %}
+
+{% block content %}
+<h1 class="mb-3">{{ muscle_group.name }}</h1>
+<p>{{ muscle_group.description|default:"No description." }}</p>
+
+<h2 class="h4 mt-4">Exercises</h2>
+<ul class="list-group">
+  {% for exercise in muscle_group.exercises.all %}
+    <li class="list-group-item">
+      <a href="{% url 'training:exercise-detail' exercise.pk %}">{{ exercise.name }}</a>
+    </li>
+  {% empty %}
+    <li class="list-group-item text-muted">No exercises found.</li>
+  {% endfor %}
+</ul>
+{% endblock %}

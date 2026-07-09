@@ -1,0 +1,25 @@
+{% extends "training/base.html" %}
+
+{% block title %}Muscle groups | Gym Tracker{% endblock %}
+
+{% block content %}
+<h1 class="mb-3">Muscle groups</h1>
+
+{% include "training/includes/search_form.html" with placeholder="Search muscle groups" %}
+
+<div class="row g-3">
+  {% for muscle_group in muscle_groups %}
+    <div class="col-md-6">
+      <div class="card h-100">
+        <div class="card-body">
+          <h2 class="h5">{{ muscle_group.name }}</h2>
+          <p class="text-muted">{{ muscle_group.description|default:"No description." }}</p>
+          <a href="{% url 'training:muscle-group-detail' muscle_group.pk %}" class="btn btn-sm btn-outline-primary">Details</a>
+        </div>
+      </div>
+    </div>
+  {% empty %}
+    <p class="text-muted">No muscle groups found.</p>
+  {% endfor %}
+</div>
+{% endblock %}

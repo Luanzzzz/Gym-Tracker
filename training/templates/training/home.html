@@ -1,0 +1,42 @@
+{% extends "training/base.html" %}
+
+{% block title %}Dashboard | Gym Tracker{% endblock %}
+
+{% block content %}
+<h1 class="mb-4">Gym Tracker Dashboard</h1>
+
+<div class="row g-3">
+  <div class="col-md-3">
+    <div class="card">
+      <div class="card-body">
+        <h2 class="h6 text-muted">Athletes</h2>
+        <p class="display-6 mb-0">{{ athlete_count }}</p>
+      </div>
+    </div>
+  </div>
+  <div class="col-md-3">
+    <div class="card">
+      <div class="card-body">
+        <h2 class="h6 text-muted">Muscle groups</h2>
+        <p class="display-6 mb-0">{{ muscle_group_count }}</p>
+      </div>
+    </div>
+  </div>
+  <div class="col-md-3">
+    <div class="card">
+      <div class="card-body">
+        <h2 class="h6 text-muted">Exercises</h2>
+        <p class="display-6 mb-0">{{ exercise_count }}</p>
+      </div>
+    </div>
+  </div>
+  <div class="col-md-3">
+    <div class="card">
+      <div class="card-body">
+        <h2 class="h6 text-muted">Workout plans</h2>
+        <p class="display-6 mb-0">{{ workout_plan_count }}</p>
+      </div>
+    </div>
+  </div>
+</div>
+{% endblock %}

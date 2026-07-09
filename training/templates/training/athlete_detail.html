@@ -1,0 +1,27 @@
+{% extends "training/base.html" %}
+
+{% block title %}{{ athlete }} | Gym Tracker{% endblock %}
+
+{% block content %}
+<h1 class="mb-3">{{ athlete }}</h1>
+
+<dl class="row">
+  <dt class="col-sm-3">Username</dt>
+  <dd class="col-sm-9">{{ athlete.username }}</dd>
+  <dt class="col-sm-3">Email</dt>
+  <dd class="col-sm-9">{{ athlete.email|default:"-" }}</dd>
+  <dt class="col-sm-3">Goal</dt>
+  <dd class="col-sm-9">{{ athlete.goal|default:"-" }}</dd>
+</dl>
+
+<h2 class="h4 mt-4">Workout plans</h2>
+<ul class="list-group">
+  {% for plan in athlete.workout_plans.all %}
+    <li class="list-group-item">
+      <a href="{% url 'training:workout-plan-detail' plan.pk %}">{{ plan.name }}</a>
+    </li>
+  {% empty %}
+    <li class="list-group-item text-muted">No workout plans found.</li>
+  {% endfor %}
+</ul>
+{% endblock %}
