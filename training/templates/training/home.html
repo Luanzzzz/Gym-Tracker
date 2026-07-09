@@ -3,38 +3,110 @@
 {% block title %}Dashboard | Gym Tracker{% endblock %}
 
 {% block content %}
-<h1 class="mb-4">Gym Tracker Dashboard</h1>
+<div class="page-heading">
+  <p class="page-kicker">Dashboard</p>
+  <div class="d-flex flex-column flex-lg-row justify-content-between gap-3">
+    <div>
+      <h1 class="h2 mb-2">Gym Tracker</h1>
+      <p class="text-muted mb-0">Track athletes, exercises and workout plans in one place.</p>
+    </div>
+    <div class="d-flex flex-wrap gap-2 align-self-lg-end stack-mobile">
+      <a href="{% url 'training:workout-plan-create' %}" class="btn btn-primary">New workout plan</a>
+      <a href="{% url 'training:exercise-create' %}" class="btn btn-outline-primary">New exercise</a>
+    </div>
+  </div>
+</div>
 
 <div class="row g-3">
-  <div class="col-md-3">
-    <div class="card">
+  <div class="col-sm-6 col-xl-3">
+    <a href="{% url 'training:athlete-list' %}" class="text-decoration-none text-reset">
+      <div class="metric-card">
+        <div class="card-body">
+          <div class="d-flex justify-content-between align-items-start gap-3">
+            <div>
+              <h2 class="h6 text-muted">Athletes</h2>
+              <p class="display-6 fw-semibold mb-0">{{ athlete_count }}</p>
+            </div>
+            <span class="metric-icon">A</span>
+          </div>
+        </div>
+      </div>
+    </a>
+  </div>
+  <div class="col-sm-6 col-xl-3">
+    <a href="{% url 'training:muscle-group-list' %}" class="text-decoration-none text-reset">
+      <div class="metric-card">
+        <div class="card-body">
+          <div class="d-flex justify-content-between align-items-start gap-3">
+            <div>
+              <h2 class="h6 text-muted">Muscle groups</h2>
+              <p class="display-6 fw-semibold mb-0">{{ muscle_group_count }}</p>
+            </div>
+            <span class="metric-icon">MG</span>
+          </div>
+        </div>
+      </div>
+    </a>
+  </div>
+  <div class="col-sm-6 col-xl-3">
+    <a href="{% url 'training:exercise-list' %}" class="text-decoration-none text-reset">
+      <div class="metric-card">
+        <div class="card-body">
+          <div class="d-flex justify-content-between align-items-start gap-3">
+            <div>
+              <h2 class="h6 text-muted">Exercises</h2>
+              <p class="display-6 fw-semibold mb-0">{{ exercise_count }}</p>
+            </div>
+            <span class="metric-icon">EX</span>
+          </div>
+        </div>
+      </div>
+    </a>
+  </div>
+  <div class="col-sm-6 col-xl-3">
+    <a href="{% url 'training:workout-plan-list' %}" class="text-decoration-none text-reset">
+      <div class="metric-card">
+        <div class="card-body">
+          <div class="d-flex justify-content-between align-items-start gap-3">
+            <div>
+              <h2 class="h6 text-muted">Workout plans</h2>
+              <p class="display-6 fw-semibold mb-0">{{ workout_plan_count }}</p>
+            </div>
+            <span class="metric-icon">WP</span>
+          </div>
+        </div>
+      </div>
+    </a>
+  </div>
+</div>
+
+<div class="row g-3 mt-2">
+  <div class="col-lg-8">
+    <div class="content-card">
       <div class="card-body">
-        <h2 class="h6 text-muted">Athletes</h2>
-        <p class="display-6 mb-0">{{ athlete_count }}</p>
+        <h2 class="h5">Quick navigation</h2>
+        <div class="row g-2 mt-2">
+          <div class="col-sm-6">
+            <a href="{% url 'training:muscle-group-list' %}" class="btn btn-outline-secondary w-100 text-start">Manage muscle groups</a>
+          </div>
+          <div class="col-sm-6">
+            <a href="{% url 'training:exercise-list' %}" class="btn btn-outline-secondary w-100 text-start">Manage exercises</a>
+          </div>
+          <div class="col-sm-6">
+            <a href="{% url 'training:athlete-list' %}" class="btn btn-outline-secondary w-100 text-start">View athletes</a>
+          </div>
+          <div class="col-sm-6">
+            <a href="{% url 'training:workout-plan-list' %}" class="btn btn-outline-secondary w-100 text-start">View workout plans</a>
+          </div>
+        </div>
       </div>
     </div>
   </div>
-  <div class="col-md-3">
-    <div class="card">
+  <div class="col-lg-4">
+    <div class="content-card">
       <div class="card-body">
-        <h2 class="h6 text-muted">Muscle groups</h2>
-        <p class="display-6 mb-0">{{ muscle_group_count }}</p>
-      </div>
-    </div>
-  </div>
-  <div class="col-md-3">
-    <div class="card">
-      <div class="card-body">
-        <h2 class="h6 text-muted">Exercises</h2>
-        <p class="display-6 mb-0">{{ exercise_count }}</p>
-      </div>
-    </div>
-  </div>
-  <div class="col-md-3">
-    <div class="card">
-      <div class="card-body">
-        <h2 class="h6 text-muted">Workout plans</h2>
-        <p class="display-6 mb-0">{{ workout_plan_count }}</p>
+        <h2 class="h5">Workflow</h2>
+        <p class="text-muted mb-0">Create muscle groups, register exercises and assemble workout plans for each athlete.</p>
       </div>
     </div>
   </div>
