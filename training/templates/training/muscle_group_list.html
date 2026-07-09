@@ -3,7 +3,10 @@
 {% block title %}Muscle groups | Gym Tracker{% endblock %}
 
 {% block content %}
-<h1 class="mb-3">Muscle groups</h1>
+<div class="d-flex justify-content-between align-items-center mb-3">
+  <h1 class="mb-0">Muscle groups</h1>
+  <a href="{% url 'training:muscle-group-create' %}" class="btn btn-primary">Create muscle group</a>
+</div>
 
 {% include "training/includes/search_form.html" with placeholder="Search muscle groups" %}
 
@@ -14,7 +17,11 @@
         <div class="card-body">
           <h2 class="h5">{{ muscle_group.name }}</h2>
           <p class="text-muted">{{ muscle_group.description|default:"No description." }}</p>
-          <a href="{% url 'training:muscle-group-detail' muscle_group.pk %}" class="btn btn-sm btn-outline-primary">Details</a>
+          <div class="d-flex gap-2">
+            <a href="{% url 'training:muscle-group-detail' muscle_group.pk %}" class="btn btn-sm btn-outline-primary">Details</a>
+            <a href="{% url 'training:muscle-group-update' muscle_group.pk %}" class="btn btn-sm btn-outline-secondary">Edit</a>
+            <a href="{% url 'training:muscle-group-delete' muscle_group.pk %}" class="btn btn-sm btn-outline-danger">Delete</a>
+          </div>
         </div>
       </div>
     </div>
