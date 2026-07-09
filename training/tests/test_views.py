@@ -146,7 +146,6 @@ class CoreDetailViewTests(CoreViewTestData):
         self.assertContains(response, "90s")
 
 
-@unittest.skip("CRUD views and URLs will be implemented in the CRUD phase.")
 class CoreCrudViewTests(CoreViewTestData):
     def test_create_muscle_group(self):
         self.client.force_login(self.athlete)
@@ -161,7 +160,7 @@ class CoreCrudViewTests(CoreViewTestData):
     def test_update_muscle_group(self):
         self.client.force_login(self.athlete)
         response = self.client.post(
-            reverse("training:muscle-group-update", kwargs={"slug": self.muscle_group.slug}),
+            reverse("training:muscle-group-update", kwargs={"pk": self.muscle_group.pk}),
             {"name": "Dorsais", "description": "Costas e dorsais", "slug": "dorsais"},
         )
 
@@ -173,7 +172,7 @@ class CoreCrudViewTests(CoreViewTestData):
         deletable_group = GrupoMuscular.objects.create(name="Abdomen", slug="abdomen")
         self.client.force_login(self.athlete)
         response = self.client.post(
-            reverse("training:muscle-group-delete", kwargs={"slug": deletable_group.slug})
+            reverse("training:muscle-group-delete", kwargs={"pk": deletable_group.pk})
         )
 
         self.assertEqual(response.status_code, 302)
@@ -199,7 +198,7 @@ class CoreCrudViewTests(CoreViewTestData):
     def test_update_exercise(self):
         self.client.force_login(self.athlete)
         response = self.client.post(
-            reverse("training:exercise-update", kwargs={"slug": self.exercise.slug}),
+            reverse("training:exercise-update", kwargs={"pk": self.exercise.pk}),
             {
                 "name": "Remada baixa aberta",
                 "description": self.exercise.description,
@@ -224,7 +223,7 @@ class CoreCrudViewTests(CoreViewTestData):
         )
         self.client.force_login(self.athlete)
         response = self.client.post(
-            reverse("training:exercise-delete", kwargs={"slug": exercise.slug})
+            reverse("training:exercise-delete", kwargs={"pk": exercise.pk})
         )
 
         self.assertEqual(response.status_code, 302)
@@ -269,6 +268,62 @@ class CoreCrudViewTests(CoreViewTestData):
 
         self.assertEqual(response.status_code, 302)
         self.assertFalse(FichaDeTreino.objects.filter(pk=self.workout_plan.pk).exists())
+
+    def test_create_workout_item(self):
+        self.client.force_login(self.athlete)
+        response = self.client.post(
+            reverse(
+                "training:workout-item-create",
+                kwargs={"workout_plan_pk": self.workout_plan.pk},
+            ),
+            {
+                "exercise": self.exercise.pk,
+                "sets": 3,
+                "reps": "12",
+                "load": "40.00",
+                "rest_seconds": 60,
+                "order": 2,
+            },
+        )
+
+        self.assertEqual(response.status_code, 302)
+        self.assertTrue(
+            ItemFichaDeTreino.objects.filter(
+                workout_plan=self.workout_plan,
+                exercise=self.exercise,
+                order=2,
+            ).exists()
+        )
+
+    def test_update_workout_item(self):
+        self.client.force_login(self.athlete)
+        response = self.client.post(
+            reverse("training:workout-item-update", kwargs={"pk": self.item.pk}),
+            {
+                "exercise": self.exercise.pk,
+                "sets": 5,
+                "reps": "6-8",
+                "load": "55.00",
+                "rest_seconds": 120,
+                "order": 1,
+            },
+        )
+
+        self.assertEqual(response.status_code, 302)
+        self.item.refresh_from_db()
+        self.assertEqual(self.item.sets, 5)
+        self.assertEqual(self.item.reps, "6-8")
+        self.assertEqual(self.item.load, Decimal("55.00"))
+        self.assertEqual(self.item.rest_seconds, 120)
+
+    def test_delete_workout_item(self):
+        self.client.force_login(self.athlete)
+        response = self.client.post(
+            reverse("training:workout-item-delete", kwargs={"pk": self.item.pk})
+        )
+
+        self.assertEqual(response.status_code, 302)
+        self.assertFalse(ItemFichaDeTreino.objects.filter(pk=self.item.pk).exists())
 
 
 @unittest.skip("Login-required behavior will be implemented with the CRUD views.")
