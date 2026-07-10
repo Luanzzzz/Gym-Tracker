@@ -2,7 +2,7 @@
 
 ## Visao geral
 
-O banco de dados do Gym Tracker sera organizado em torno de cinco modelos principais:
+O banco de dados do Gym Tracker esta organizado em torno de cinco modelos principais:
 
 - `Atleta`
 - `GrupoMuscular`
@@ -14,12 +14,15 @@ Essa estrutura cobre autenticacao, catalogo de exercicios, classificacao por gru
 
 ## Atleta
 
-`Atleta` sera o usuario principal do sistema e devera herdar de `AbstractUser`.
+`Atleta` e o usuario principal do sistema e herda de `AbstractUser`.
 
-Campos planejados:
+Campos implementados:
 
 - Campos herdados de `AbstractUser`, como `username`, `first_name`, `last_name`, `email`, `password`, `is_active` e `is_staff`.
-- Campos adicionais simples, como data de nascimento, objetivo de treino ou nivel de experiencia, se forem uteis para o escopo final.
+- `birth_date`
+- `height`
+- `weight`
+- `goal`
 
 ### Por que herdar de AbstractUser
 
@@ -31,10 +34,13 @@ Essa escolha evita criar um perfil separado desnecessario para o escopo inicial 
 
 `GrupoMuscular` representa uma categoria anatomica usada para organizar exercicios.
 
-Campos planejados:
+Campos implementados:
 
-- `nome`: nome do grupo muscular.
-- `descricao`: texto opcional explicando o grupo ou exemplos de uso.
+- `name`: nome do grupo muscular.
+- `description`: texto opcional explicando o grupo ou exemplos de uso.
+- `slug`: identificador unico para URLs e administracao.
+- `created_at`
+- `updated_at`
 
 Relacionamentos:
 
@@ -45,30 +51,34 @@ Relacionamentos:
 
 `Exercicio` representa um movimento ou atividade que pode ser usado em fichas de treino.
 
-Campos planejados:
+Campos implementados:
 
-- `nome`: nome do exercicio.
-- `descricao`: explicacao da execucao.
-- `grupo_muscular`: `ForeignKey` para `GrupoMuscular`.
-- Campos opcionais, como equipamento ou observacoes tecnicas.
+- `name`: nome do exercicio.
+- `description`: explicacao da execucao.
+- `equipment`: equipamento usado, quando aplicavel.
+- `difficulty`: nivel do exercicio.
+- `muscle_group`: `ForeignKey` para `GrupoMuscular`.
+- `slug`: identificador unico.
 
 Relacionamentos:
 
 - Um `Exercicio` pertence a um `GrupoMuscular`.
 - Um `Exercicio` pode aparecer em varias `FichaDeTreino`.
-- A relacao com `FichaDeTreino` sera feita por `ItemFichaDeTreino`.
+- A relacao com `FichaDeTreino` e feita por `ItemFichaDeTreino`.
 
 ## FichaDeTreino
 
 `FichaDeTreino` representa um plano de treino de um atleta.
 
-Campos planejados:
+Campos implementados:
 
-- `atleta`: `ForeignKey` para `Atleta`.
-- `nome`: nome da ficha, como "Treino A" ou "Hipertrofia - Pernas".
-- `objetivo`: objetivo da ficha.
-- `data_inicio`: data de inicio da ficha.
-- `ativa`: indicador simples para saber se a ficha esta em uso.
+- `athlete`: `ForeignKey` para `Atleta`.
+- `name`: nome da ficha, como "Treino A" ou "Hipertrofia - Pernas".
+- `objective`: objetivo da ficha.
+- `notes`: observacoes gerais.
+- `exercises`: `ManyToManyField` para `Exercicio` usando `ItemFichaDeTreino` como `through`.
+- `created_at`
+- `updated_at`
 
 Relacionamentos:
 
@@ -78,18 +88,17 @@ Relacionamentos:
 
 ## ItemFichaDeTreino
 
-`ItemFichaDeTreino` sera o modelo intermediario entre `FichaDeTreino` e `Exercicio`.
+`ItemFichaDeTreino` e o modelo intermediario entre `FichaDeTreino` e `Exercicio`.
 
-Campos planejados:
+Campos implementados:
 
-- `ficha`: `ForeignKey` para `FichaDeTreino`.
-- `exercicio`: `ForeignKey` para `Exercicio`.
-- `ordem`: posicao do exercicio dentro da ficha.
-- `series`: quantidade de series.
-- `repeticoes`: quantidade ou faixa de repeticoes.
-- `carga`: carga recomendada, quando aplicavel.
-- `descanso`: tempo de descanso entre series.
-- `observacoes`: instrucoes especificas para aquele item.
+- `workout_plan`: `ForeignKey` para `FichaDeTreino`.
+- `exercise`: `ForeignKey` para `Exercicio`.
+- `sets`: quantidade de series.
+- `reps`: quantidade ou faixa de repeticoes.
+- `load`: carga recomendada, quando aplicavel.
+- `rest_seconds`: tempo de descanso entre series.
+- `order`: posicao do exercicio dentro da ficha.
 
 ### Por que usar ItemFichaDeTreino como modelo intermediario
 
@@ -97,7 +106,7 @@ Uma relacao `ManyToMany` simples entre `FichaDeTreino` e `Exercicio` indicaria a
 
 Por exemplo, o exercicio "Supino reto" pode aparecer em uma ficha com 3 series de 10 repeticoes e em outra com 5 series de 5 repeticoes. Esses dados nao pertencem ao exercicio em si; pertencem ao uso do exercicio dentro de uma ficha especifica.
 
-Por isso, `ItemFichaDeTreino` sera usado como modelo intermediario equivalente a um `ManyToMany` com `through`, permitindo armazenar informacoes da relacao.
+Por isso, `ItemFichaDeTreino` e usado como modelo intermediario equivalente a um `ManyToMany` com `through`, permitindo armazenar informacoes da relacao.
 
 ## Relacionamentos resumidos
 
@@ -109,7 +118,7 @@ Por isso, `ItemFichaDeTreino` sera usado como modelo intermediario equivalente a
 
 ## Estrutura esperada para o diagrama ER
 
-O PR de modelagem devera anexar um diagrama ER contendo:
+O diagrama ER esta documentado em `docs/database/ER_DIAGRAM.md` e contem:
 
 - As cinco tabelas principais.
 - Chaves primarias.
