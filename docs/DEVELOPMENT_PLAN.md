@@ -2,11 +2,15 @@
 
 ## Visao geral
 
-O Gym Tracker sera implementado em fases pequenas. Cada fase deve ser feita em uma branch propria, revisada em um PR separado e composta por commits atomicos.
+Status da entrega final: fases principais implementadas para avaliacao da Mate Academy e apresentacao em portfolio.
+
+O Gym Tracker foi organizado em fases pequenas. Cada fase deve ser feita em uma branch propria, revisada em um PR separado e composta por commits atomicos.
 
 O objetivo e manter o historico simples de revisar, com cada PR entregando uma parte funcional e verificavel do sistema.
 
 ## Fase 1 - Documentacao inicial
+
+Status: concluida.
 
 Branch sugerida:
 
@@ -30,6 +34,8 @@ Criterios de aceite:
 - O plano cita o diagrama ER obrigatorio no PR de modelagem.
 
 ## Fase 2 - Scaffold Django e configuracao base
+
+Status: concluida.
 
 Branch sugerida:
 
@@ -55,6 +61,8 @@ Criterios de aceite:
 - Nenhuma regra de negocio complexa foi implementada ainda.
 
 ## Fase 3 - Modelagem do banco
+
+Status: concluida.
 
 Branch sugerida:
 
@@ -84,6 +92,8 @@ Criterios de aceite:
 
 ## Fase 4 - CRUD e navegacao
 
+Status: concluida.
+
 Branch sugerida:
 
 - `feature/core-crud`
@@ -109,6 +119,8 @@ Criterios de aceite:
 
 ## Fase 5 - Autenticacao e fluxo do atleta
 
+Status: concluida parcialmente dentro do escopo final. Login, logout e protecao basica das rotas foram implementados; cadastro publico de atleta e permissoes avancadas ficam fora do foco desta entrega.
+
 Branch sugerida:
 
 - `feature/athlete-auth-flow`
@@ -132,6 +144,8 @@ Criterios de aceite:
 - Permissoes avancadas nao sao o foco; apenas restricoes basicas de acesso autenticado.
 
 ## Fase 6 - Templates e Bootstrap
+
+Status: concluida.
 
 Branch sugerida:
 
@@ -157,6 +171,8 @@ Criterios de aceite:
 - A aplicacao pode ser apresentada como portfolio.
 
 ## Fase 7 - Testes, ajustes finais e README
+
+Status: concluida nesta revisao final.
 
 Branch sugerida:
 

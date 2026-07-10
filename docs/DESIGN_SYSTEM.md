@@ -1,5 +1,7 @@
 # Design System - Gym Tracker
 
+Status: implementado com Bootstrap 5, Django Templates e CSS leve em `static/training/css/styles.css`.
+
 ## 1. Identidade visual
 
 Nome do produto:
@@ -168,7 +170,7 @@ A sidebar deve ser responsiva e nao deve dificultar o uso em mobile.
 
 Cards devem resumir informacoes importantes:
 
-- Total de fichas ativas.
+- Total de fichas de treino.
 - Total de exercicios cadastrados.
 - Total de grupos musculares.
 - Ultimas fichas criadas.
@@ -238,8 +240,7 @@ Badges devem indicar status ou classificacoes curtas.
 
 Exemplos:
 
-- Ficha ativa: `badge text-bg-success`
-- Ficha inativa: `badge text-bg-secondary`
+- Nivel do exercicio: `badge text-bg-info`
 - Grupo muscular: `badge text-bg-primary`
 - Nivel ou objetivo: `badge text-bg-info`
 
@@ -302,9 +303,9 @@ Exemplo para ficha de treino:
 - Nome da ficha.
 - Atleta.
 - Objetivo.
-- Status.
+- Observacoes gerais.
 - Lista ordenada de exercicios.
-- Series, repeticoes, carga, descanso e observacoes.
+- Series, repeticoes, carga, descanso e ordem.
 
 Acoes recomendadas:
 
@@ -356,7 +357,7 @@ Se um template pronto for usado, ele deve ser:
 - Responsivo.
 - Sem dependencia obrigatoria de JavaScript pesado.
 
-## 6. Regras de implementacao futura
+## 6. Regras de manutencao
 
 ### Simplicidade
 
@@ -400,10 +401,10 @@ Manter consistencia entre telas:
 
 ### Manutencao
 
-Como o projeto sera feito com Django Templates, os layouts devem ser organizados em templates reutilizaveis futuramente:
+Como o projeto e feito com Django Templates, os layouts devem permanecer organizados em templates reutilizaveis:
 
 - Template base.
 - Blocos para titulo e conteudo.
 - Includes para navbar, mensagens e componentes repetidos.
 
-Esta etapa documenta apenas o Design System. Nenhum template HTML, arquivo CSS ou codigo Django deve ser criado aqui.
+Esta documentacao orienta a manutencao visual do projeto implementado.

@@ -76,3 +76,15 @@ Diagrama ER anexado abaixo:
 
 <!-- anexar imagem ou link do diagrama ER aqui -->
 ```
+
+## PR final de entrega
+
+Titulo sugerido:
+
+```text
+Chore: prepare Gym Tracker portfolio delivery
+```
+
+Descricao final pronta:
+
+- Ver `docs/FINAL_PR_DESCRIPTION.md`.
