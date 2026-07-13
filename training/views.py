@@ -11,12 +11,12 @@ from django.views.generic import (
 )
 
 from .forms import (
-    ExercicioForm,
-    FichaDeTreinoForm,
-    GrupoMuscularForm,
-    ItemFichaDeTreinoForm,
+    ExerciseForm,
+    MuscleGroupForm,
+    WorkoutItemForm,
+    WorkoutPlanForm,
 )
-from .models import Atleta, Exercicio, FichaDeTreino, GrupoMuscular, ItemFichaDeTreino
+from .models import Athlete, Exercise, MuscleGroup, WorkoutItem, WorkoutPlan
 
 
 class HomeView(TemplateView):
@@ -24,10 +24,10 @@ class HomeView(TemplateView):
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
-        context["athlete_count"] = Atleta.objects.count()
-        context["muscle_group_count"] = GrupoMuscular.objects.count()
-        context["exercise_count"] = Exercicio.objects.count()
-        context["workout_plan_count"] = FichaDeTreino.objects.count()
+        context["athlete_count"] = Athlete.objects.count()
+        context["muscle_group_count"] = MuscleGroup.objects.count()
+        context["exercise_count"] = Exercise.objects.count()
+        context["workout_plan_count"] = WorkoutPlan.objects.count()
         return context
 
 
@@ -55,28 +55,28 @@ class SearchQueryMixin:
         return context
 
 
-class AtletaListView(LoginRequiredMixin, SearchQueryMixin, ListView):
-    model = Atleta
+class AthleteListView(LoginRequiredMixin, SearchQueryMixin, ListView):
+    model = Athlete
     template_name = "training/athlete_list.html"
     context_object_name = "athletes"
     search_fields = ("username", "first_name", "last_name")
 
 
-class AtletaDetailView(LoginRequiredMixin, DetailView):
-    model = Atleta
+class AthleteDetailView(LoginRequiredMixin, DetailView):
+    model = Athlete
     template_name = "training/athlete_detail.html"
     context_object_name = "athlete"
 
 
-class GrupoMuscularListView(LoginRequiredMixin, SearchQueryMixin, ListView):
-    model = GrupoMuscular
+class MuscleGroupListView(LoginRequiredMixin, SearchQueryMixin, ListView):
+    model = MuscleGroup
     template_name = "training/muscle_group_list.html"
     context_object_name = "muscle_groups"
     search_fields = ("name",)
 
 
-class GrupoMuscularDetailView(LoginRequiredMixin, DetailView):
-    model = GrupoMuscular
+class MuscleGroupDetailView(LoginRequiredMixin, DetailView):
+    model = MuscleGroup
     template_name = "training/muscle_group_detail.html"
     context_object_name = "muscle_group"
 
@@ -84,31 +84,31 @@ class GrupoMuscularDetailView(LoginRequiredMixin, DetailView):
         return super().get_queryset().prefetch_related("exercises")
 
 
-class GrupoMuscularCreateView(LoginRequiredMixin, CreateView):
-    model = GrupoMuscular
-    form_class = GrupoMuscularForm
+class MuscleGroupCreateView(LoginRequiredMixin, CreateView):
+    model = MuscleGroup
+    form_class = MuscleGroupForm
     template_name = "training/form.html"
     success_url = reverse_lazy("training:muscle-group-list")
     extra_context = {"title": "Create muscle group", "submit_label": "Create"}
 
 
-class GrupoMuscularUpdateView(LoginRequiredMixin, UpdateView):
-    model = GrupoMuscular
-    form_class = GrupoMuscularForm
+class MuscleGroupUpdateView(LoginRequiredMixin, UpdateView):
+    model = MuscleGroup
+    form_class = MuscleGroupForm
     template_name = "training/form.html"
     success_url = reverse_lazy("training:muscle-group-list")
     extra_context = {"title": "Edit muscle group", "submit_label": "Save"}
 
 
-class GrupoMuscularDeleteView(LoginRequiredMixin, DeleteView):
-    model = GrupoMuscular
+class MuscleGroupDeleteView(LoginRequiredMixin, DeleteView):
+    model = MuscleGroup
     template_name = "training/confirm_delete.html"
     success_url = reverse_lazy("training:muscle-group-list")
     extra_context = {"title": "Delete muscle group"}
 
 
-class ExercicioListView(LoginRequiredMixin, SearchQueryMixin, ListView):
-    model = Exercicio
+class ExerciseListView(LoginRequiredMixin, SearchQueryMixin, ListView):
+    model = Exercise
     template_name = "training/exercise_list.html"
     context_object_name = "exercises"
     search_fields = ("name",)
@@ -117,8 +117,8 @@ class ExercicioListView(LoginRequiredMixin, SearchQueryMixin, ListView):
         return super().get_queryset().select_related("muscle_group")
 
 
-class ExercicioDetailView(LoginRequiredMixin, DetailView):
-    model = Exercicio
+class ExerciseDetailView(LoginRequiredMixin, DetailView):
+    model = Exercise
     template_name = "training/exercise_detail.html"
     context_object_name = "exercise"
 
@@ -126,31 +126,31 @@ class ExercicioDetailView(LoginRequiredMixin, DetailView):
         return super().get_queryset().select_related("muscle_group")
 
 
-class ExercicioCreateView(LoginRequiredMixin, CreateView):
-    model = Exercicio
-    form_class = ExercicioForm
+class ExerciseCreateView(LoginRequiredMixin, CreateView):
+    model = Exercise
+    form_class = ExerciseForm
     template_name = "training/form.html"
     success_url = reverse_lazy("training:exercise-list")
     extra_context = {"title": "Create exercise", "submit_label": "Create"}
 
 
-class ExercicioUpdateView(LoginRequiredMixin, UpdateView):
-    model = Exercicio
-    form_class = ExercicioForm
+class ExerciseUpdateView(LoginRequiredMixin, UpdateView):
+    model = Exercise
+    form_class = ExerciseForm
     template_name = "training/form.html"
     success_url = reverse_lazy("training:exercise-list")
     extra_context = {"title": "Edit exercise", "submit_label": "Save"}
 
 
-class ExercicioDeleteView(LoginRequiredMixin, DeleteView):
-    model = Exercicio
+class ExerciseDeleteView(LoginRequiredMixin, DeleteView):
+    model = Exercise
     template_name = "training/confirm_delete.html"
     success_url = reverse_lazy("training:exercise-list")
     extra_context = {"title": "Delete exercise"}
 
 
-class FichaDeTreinoListView(LoginRequiredMixin, SearchQueryMixin, ListView):
-    model = FichaDeTreino
+class WorkoutPlanListView(LoginRequiredMixin, SearchQueryMixin, ListView):
+    model = WorkoutPlan
     template_name = "training/workout_plan_list.html"
     context_object_name = "workout_plans"
     search_fields = ("name", "objective")
@@ -159,8 +159,8 @@ class FichaDeTreinoListView(LoginRequiredMixin, SearchQueryMixin, ListView):
         return super().get_queryset().select_related("athlete")
 
 
-class FichaDeTreinoDetailView(LoginRequiredMixin, DetailView):
-    model = FichaDeTreino
+class WorkoutPlanDetailView(LoginRequiredMixin, DetailView):
+    model = WorkoutPlan
     template_name = "training/workout_plan_detail.html"
     context_object_name = "workout_plan"
 
@@ -173,37 +173,37 @@ class FichaDeTreinoDetailView(LoginRequiredMixin, DetailView):
         )
 
 
-class FichaDeTreinoCreateView(LoginRequiredMixin, CreateView):
-    model = FichaDeTreino
-    form_class = FichaDeTreinoForm
+class WorkoutPlanCreateView(LoginRequiredMixin, CreateView):
+    model = WorkoutPlan
+    form_class = WorkoutPlanForm
     template_name = "training/form.html"
     success_url = reverse_lazy("training:workout-plan-list")
     extra_context = {"title": "Create workout plan", "submit_label": "Create"}
 
 
-class FichaDeTreinoUpdateView(LoginRequiredMixin, UpdateView):
-    model = FichaDeTreino
-    form_class = FichaDeTreinoForm
+class WorkoutPlanUpdateView(LoginRequiredMixin, UpdateView):
+    model = WorkoutPlan
+    form_class = WorkoutPlanForm
     template_name = "training/form.html"
     success_url = reverse_lazy("training:workout-plan-list")
     extra_context = {"title": "Edit workout plan", "submit_label": "Save"}
 
 
-class FichaDeTreinoDeleteView(LoginRequiredMixin, DeleteView):
-    model = FichaDeTreino
+class WorkoutPlanDeleteView(LoginRequiredMixin, DeleteView):
+    model = WorkoutPlan
     template_name = "training/confirm_delete.html"
     success_url = reverse_lazy("training:workout-plan-list")
     extra_context = {"title": "Delete workout plan"}
 
 
-class ItemFichaDeTreinoCreateView(LoginRequiredMixin, CreateView):
-    model = ItemFichaDeTreino
-    form_class = ItemFichaDeTreinoForm
+class WorkoutItemCreateView(LoginRequiredMixin, CreateView):
+    model = WorkoutItem
+    form_class = WorkoutItemForm
     template_name = "training/form.html"
     extra_context = {"title": "Create workout item", "submit_label": "Create"}
 
     def dispatch(self, request, *args, **kwargs):
-        self.workout_plan = FichaDeTreino.objects.get(pk=kwargs["workout_plan_pk"])
+        self.workout_plan = WorkoutPlan.objects.get(pk=kwargs["workout_plan_pk"])
         return super().dispatch(request, *args, **kwargs)
 
     def form_valid(self, form):
@@ -219,9 +219,9 @@ class ItemFichaDeTreinoCreateView(LoginRequiredMixin, CreateView):
         return context
 
 
-class ItemFichaDeTreinoUpdateView(LoginRequiredMixin, UpdateView):
-    model = ItemFichaDeTreino
-    form_class = ItemFichaDeTreinoForm
+class WorkoutItemUpdateView(LoginRequiredMixin, UpdateView):
+    model = WorkoutItem
+    form_class = WorkoutItemForm
     template_name = "training/form.html"
     extra_context = {"title": "Edit workout item", "submit_label": "Save"}
 
@@ -232,8 +232,8 @@ class ItemFichaDeTreinoUpdateView(LoginRequiredMixin, UpdateView):
         )
 
 
-class ItemFichaDeTreinoDeleteView(LoginRequiredMixin, DeleteView):
-    model = ItemFichaDeTreino
+class WorkoutItemDeleteView(LoginRequiredMixin, DeleteView):
+    model = WorkoutItem
     template_name = "training/confirm_delete.html"
     extra_context = {"title": "Delete workout item"}
 

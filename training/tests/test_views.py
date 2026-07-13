@@ -5,49 +5,49 @@ from django.test import TestCase
 from django.urls import reverse
 
 from training.models import (
-    Atleta,
-    Exercicio,
-    FichaDeTreino,
-    GrupoMuscular,
-    ItemFichaDeTreino,
+    Athlete,
+    Exercise,
+    MuscleGroup,
+    WorkoutItem,
+    WorkoutPlan,
 )
 
 
 class CoreViewTestData(TestCase):
     def setUp(self):
-        self.athlete = Atleta.objects.create_user(
+        self.athlete = Athlete.objects.create_user(
             username="ana",
             password="test-pass",
             first_name="Ana",
             last_name="Costa",
             goal="Condicionamento",
         )
-        self.other_athlete = Atleta.objects.create_user(
+        self.other_athlete = Athlete.objects.create_user(
             username="bruno",
             password="test-pass",
             first_name="Bruno",
             last_name="Lima",
         )
-        self.muscle_group = GrupoMuscular.objects.create(
+        self.muscle_group = MuscleGroup.objects.create(
             name="Costas",
             description="Exercicios para dorsais",
             slug="costas",
         )
-        self.exercise = Exercicio.objects.create(
+        self.exercise = Exercise.objects.create(
             name="Remada baixa",
             description="Remada sentada no cabo",
             equipment="Cabo",
-            difficulty=Exercicio.Difficulty.BEGINNER,
+            difficulty=Exercise.Difficulty.BEGINNER,
             muscle_group=self.muscle_group,
             slug="remada-baixa",
         )
-        self.workout_plan = FichaDeTreino.objects.create(
+        self.workout_plan = WorkoutPlan.objects.create(
             name="Treino Pull",
             athlete=self.athlete,
             objective="Forca para costas",
             notes="Manter controle na fase excentrica.",
         )
-        self.item = ItemFichaDeTreino.objects.create(
+        self.item = WorkoutItem.objects.create(
             workout_plan=self.workout_plan,
             exercise=self.exercise,
             sets=4,
@@ -161,7 +161,7 @@ class CoreCrudViewTests(CoreViewTestData):
         )
 
         self.assertEqual(response.status_code, 302)
-        self.assertTrue(GrupoMuscular.objects.filter(slug="pernas").exists())
+        self.assertTrue(MuscleGroup.objects.filter(slug="pernas").exists())
 
     def test_update_muscle_group(self):
         self.client.force_login(self.athlete)
@@ -175,14 +175,14 @@ class CoreCrudViewTests(CoreViewTestData):
         self.assertEqual(self.muscle_group.name, "Dorsais")
 
     def test_delete_muscle_group(self):
-        deletable_group = GrupoMuscular.objects.create(name="Abdomen", slug="abdomen")
+        deletable_group = MuscleGroup.objects.create(name="Abdomen", slug="abdomen")
         self.client.force_login(self.athlete)
         response = self.client.post(
             reverse("training:muscle-group-delete", kwargs={"pk": deletable_group.pk})
         )
 
         self.assertEqual(response.status_code, 302)
-        self.assertFalse(GrupoMuscular.objects.filter(pk=deletable_group.pk).exists())
+        self.assertFalse(MuscleGroup.objects.filter(pk=deletable_group.pk).exists())
 
     def test_create_exercise(self):
         self.client.force_login(self.athlete)
@@ -192,14 +192,14 @@ class CoreCrudViewTests(CoreViewTestData):
                 "name": "Puxada alta",
                 "description": "Puxada no pulley",
                 "equipment": "Pulley",
-                "difficulty": Exercicio.Difficulty.BEGINNER,
+                "difficulty": Exercise.Difficulty.BEGINNER,
                 "muscle_group": self.muscle_group.pk,
                 "slug": "puxada-alta",
             },
         )
 
         self.assertEqual(response.status_code, 302)
-        self.assertTrue(Exercicio.objects.filter(slug="puxada-alta").exists())
+        self.assertTrue(Exercise.objects.filter(slug="puxada-alta").exists())
 
     def test_update_exercise(self):
         self.client.force_login(self.athlete)
@@ -209,7 +209,7 @@ class CoreCrudViewTests(CoreViewTestData):
                 "name": "Remada baixa aberta",
                 "description": self.exercise.description,
                 "equipment": self.exercise.equipment,
-                "difficulty": Exercicio.Difficulty.INTERMEDIATE,
+                "difficulty": Exercise.Difficulty.INTERMEDIATE,
                 "muscle_group": self.muscle_group.pk,
                 "slug": self.exercise.slug,
             },
@@ -220,10 +220,10 @@ class CoreCrudViewTests(CoreViewTestData):
         self.assertEqual(self.exercise.name, "Remada baixa aberta")
 
     def test_delete_exercise(self):
-        exercise = Exercicio.objects.create(
+        exercise = Exercise.objects.create(
             name="Face pull",
             equipment="Cabo",
-            difficulty=Exercicio.Difficulty.BEGINNER,
+            difficulty=Exercise.Difficulty.BEGINNER,
             muscle_group=self.muscle_group,
             slug="face-pull",
         )
@@ -233,7 +233,7 @@ class CoreCrudViewTests(CoreViewTestData):
         )
 
         self.assertEqual(response.status_code, 302)
-        self.assertFalse(Exercicio.objects.filter(pk=exercise.pk).exists())
+        self.assertFalse(Exercise.objects.filter(pk=exercise.pk).exists())
 
     def test_create_workout_plan(self):
         self.client.force_login(self.athlete)
@@ -248,7 +248,7 @@ class CoreCrudViewTests(CoreViewTestData):
         )
 
         self.assertEqual(response.status_code, 302)
-        self.assertTrue(FichaDeTreino.objects.filter(name="Treino Full Body").exists())
+        self.assertTrue(WorkoutPlan.objects.filter(name="Treino Full Body").exists())
 
     def test_update_workout_plan(self):
         self.client.force_login(self.athlete)
@@ -273,7 +273,7 @@ class CoreCrudViewTests(CoreViewTestData):
         )
 
         self.assertEqual(response.status_code, 302)
-        self.assertFalse(FichaDeTreino.objects.filter(pk=self.workout_plan.pk).exists())
+        self.assertFalse(WorkoutPlan.objects.filter(pk=self.workout_plan.pk).exists())
 
     def test_create_workout_item(self):
         self.client.force_login(self.athlete)
@@ -294,7 +294,7 @@ class CoreCrudViewTests(CoreViewTestData):
 
         self.assertEqual(response.status_code, 302)
         self.assertTrue(
-            ItemFichaDeTreino.objects.filter(
+            WorkoutItem.objects.filter(
                 workout_plan=self.workout_plan,
                 exercise=self.exercise,
                 order=2,
@@ -329,7 +329,7 @@ class CoreCrudViewTests(CoreViewTestData):
         )
 
         self.assertEqual(response.status_code, 302)
-        self.assertFalse(ItemFichaDeTreino.objects.filter(pk=self.item.pk).exists())
+        self.assertFalse(WorkoutItem.objects.filter(pk=self.item.pk).exists())
 
 
 class AuthenticationRequiredViewTests(CoreViewTestData):

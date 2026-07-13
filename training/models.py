@@ -2,7 +2,7 @@ from django.contrib.auth.models import AbstractUser
 from django.db import models
 
 
-class Atleta(AbstractUser):
+class Athlete(AbstractUser):
     birth_date = models.DateField(null=True, blank=True)
     height = models.DecimalField(max_digits=5, decimal_places=2, null=True, blank=True)
     weight = models.DecimalField(max_digits=5, decimal_places=2, null=True, blank=True)
@@ -16,7 +16,7 @@ class Atleta(AbstractUser):
         return full_name or self.username
 
 
-class GrupoMuscular(models.Model):
+class MuscleGroup(models.Model):
     name = models.CharField(max_length=100, unique=True)
     description = models.TextField(blank=True)
     slug = models.SlugField(max_length=120, unique=True)
@@ -25,14 +25,14 @@ class GrupoMuscular(models.Model):
 
     class Meta:
         ordering = ["name"]
-        verbose_name = "grupo muscular"
-        verbose_name_plural = "grupos musculares"
+        verbose_name = "muscle group"
+        verbose_name_plural = "muscle groups"
 
     def __str__(self):
         return self.name
 
 
-class Exercicio(models.Model):
+class Exercise(models.Model):
     class Difficulty(models.TextChoices):
         BEGINNER = "beginner", "Beginner"
         INTERMEDIATE = "intermediate", "Intermediate"
@@ -47,7 +47,7 @@ class Exercicio(models.Model):
         default=Difficulty.BEGINNER,
     )
     muscle_group = models.ForeignKey(
-        GrupoMuscular,
+        MuscleGroup,
         on_delete=models.PROTECT,
         related_name="exercises",
     )
@@ -55,25 +55,25 @@ class Exercicio(models.Model):
 
     class Meta:
         ordering = ["name"]
-        verbose_name = "exercicio"
-        verbose_name_plural = "exercicios"
+        verbose_name = "exercise"
+        verbose_name_plural = "exercises"
 
     def __str__(self):
         return self.name
 
 
-class FichaDeTreino(models.Model):
+class WorkoutPlan(models.Model):
     name = models.CharField(max_length=120)
     athlete = models.ForeignKey(
-        Atleta,
+        Athlete,
         on_delete=models.CASCADE,
         related_name="workout_plans",
     )
     objective = models.CharField(max_length=255, blank=True)
     notes = models.TextField(blank=True)
     exercises = models.ManyToManyField(
-        Exercicio,
-        through="ItemFichaDeTreino",
+        Exercise,
+        through="WorkoutItem",
         related_name="workout_plans",
     )
     created_at = models.DateTimeField(auto_now_add=True)
@@ -81,21 +81,21 @@ class FichaDeTreino(models.Model):
 
     class Meta:
         ordering = ["-created_at", "name"]
-        verbose_name = "ficha de treino"
-        verbose_name_plural = "fichas de treino"
+        verbose_name = "workout plan"
+        verbose_name_plural = "workout plans"
 
     def __str__(self):
         return f"{self.name} - {self.athlete}"
 
 
-class ItemFichaDeTreino(models.Model):
+class WorkoutItem(models.Model):
     workout_plan = models.ForeignKey(
-        FichaDeTreino,
+        WorkoutPlan,
         on_delete=models.CASCADE,
         related_name="items",
     )
     exercise = models.ForeignKey(
-        Exercicio,
+        Exercise,
         on_delete=models.PROTECT,
         related_name="workout_items",
     )
@@ -113,8 +113,8 @@ class ItemFichaDeTreino(models.Model):
                 name="unique_workout_item_order",
             ),
         ]
-        verbose_name = "item da ficha de treino"
-        verbose_name_plural = "itens da ficha de treino"
+        verbose_name = "workout item"
+        verbose_name_plural = "workout items"
 
     def __str__(self):
         return f"{self.order}. {self.exercise} ({self.workout_plan.name})"
