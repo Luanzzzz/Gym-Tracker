@@ -1,7 +1,7 @@
 from django import forms
 from django.contrib.auth.forms import AuthenticationForm
 
-from .models import Exercicio, FichaDeTreino, GrupoMuscular, ItemFichaDeTreino
+from .models import Exercise, MuscleGroup, WorkoutItem, WorkoutPlan
 
 
 def apply_bootstrap_classes(fields):
@@ -27,25 +27,25 @@ class BootstrapModelForm(forms.ModelForm):
         apply_bootstrap_classes(self.fields)
 
 
-class GrupoMuscularForm(BootstrapModelForm):
+class MuscleGroupForm(BootstrapModelForm):
     class Meta:
-        model = GrupoMuscular
+        model = MuscleGroup
         fields = ["name", "description", "slug"]
 
 
-class ExercicioForm(BootstrapModelForm):
+class ExerciseForm(BootstrapModelForm):
     class Meta:
-        model = Exercicio
+        model = Exercise
         fields = ["name", "description", "equipment", "difficulty", "muscle_group", "slug"]
 
 
-class FichaDeTreinoForm(BootstrapModelForm):
+class WorkoutPlanForm(BootstrapModelForm):
     class Meta:
-        model = FichaDeTreino
+        model = WorkoutPlan
         fields = ["name", "athlete", "objective", "notes"]
 
 
-class ItemFichaDeTreinoForm(BootstrapModelForm):
+class WorkoutItemForm(BootstrapModelForm):
     class Meta:
-        model = ItemFichaDeTreino
+        model = WorkoutItem
         fields = ["exercise", "sets", "reps", "load", "rest_seconds", "order"]

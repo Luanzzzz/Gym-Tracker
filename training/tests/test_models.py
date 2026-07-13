@@ -3,17 +3,17 @@ from decimal import Decimal
 from django.test import TestCase
 
 from training.models import (
-    Atleta,
-    Exercicio,
-    FichaDeTreino,
-    GrupoMuscular,
-    ItemFichaDeTreino,
+    Athlete,
+    Exercise,
+    MuscleGroup,
+    WorkoutItem,
+    WorkoutPlan,
 )
 
 
 class TrainingModelTests(TestCase):
     def setUp(self):
-        self.athlete = Atleta.objects.create_user(
+        self.athlete = Athlete.objects.create_user(
             username="mateus",
             password="test-pass",
             first_name="Mateus",
@@ -22,20 +22,20 @@ class TrainingModelTests(TestCase):
             height=Decimal("1.80"),
             weight=Decimal("82.50"),
         )
-        self.muscle_group = GrupoMuscular.objects.create(
+        self.muscle_group = MuscleGroup.objects.create(
             name="Peito",
             description="Exercicios para peitoral",
             slug="peito",
         )
-        self.exercise = Exercicio.objects.create(
+        self.exercise = Exercise.objects.create(
             name="Supino reto",
             description="Exercicio com barra para peitoral",
             equipment="Barra",
-            difficulty=Exercicio.Difficulty.INTERMEDIATE,
+            difficulty=Exercise.Difficulty.INTERMEDIATE,
             muscle_group=self.muscle_group,
             slug="supino-reto",
         )
-        self.workout_plan = FichaDeTreino.objects.create(
+        self.workout_plan = WorkoutPlan.objects.create(
             name="Treino A",
             athlete=self.athlete,
             objective="Forca e hipertrofia",
@@ -43,7 +43,7 @@ class TrainingModelTests(TestCase):
         )
 
     def test_model_str_methods(self):
-        item = ItemFichaDeTreino.objects.create(
+        item = WorkoutItem.objects.create(
             workout_plan=self.workout_plan,
             exercise=self.exercise,
             sets=4,
@@ -66,7 +66,7 @@ class TrainingModelTests(TestCase):
         self.assertIn(self.workout_plan, self.athlete.workout_plans.all())
 
     def test_workout_plan_with_intermediate_item(self):
-        item = ItemFichaDeTreino.objects.create(
+        item = WorkoutItem.objects.create(
             workout_plan=self.workout_plan,
             exercise=self.exercise,
             sets=3,

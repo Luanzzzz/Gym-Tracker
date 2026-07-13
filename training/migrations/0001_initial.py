@@ -17,7 +17,7 @@ class Migration(migrations.Migration):
 
     operations = [
         migrations.CreateModel(
-            name="GrupoMuscular",
+            name="MuscleGroup",
             fields=[
                 (
                     "id",
@@ -35,13 +35,13 @@ class Migration(migrations.Migration):
                 ("updated_at", models.DateTimeField(auto_now=True)),
             ],
             options={
-                "verbose_name": "grupo muscular",
-                "verbose_name_plural": "grupos musculares",
+                "verbose_name": "muscle group",
+                "verbose_name_plural": "muscle groups",
                 "ordering": ["name"],
             },
         ),
         migrations.CreateModel(
-            name="Atleta",
+            name="Athlete",
             fields=[
                 (
                     "id",
@@ -167,7 +167,7 @@ class Migration(migrations.Migration):
             ],
         ),
         migrations.CreateModel(
-            name="FichaDeTreino",
+            name="WorkoutPlan",
             fields=[
                 (
                     "id",
@@ -193,13 +193,13 @@ class Migration(migrations.Migration):
                 ),
             ],
             options={
-                "verbose_name": "ficha de treino",
-                "verbose_name_plural": "fichas de treino",
+                "verbose_name": "workout plan",
+                "verbose_name_plural": "workout plans",
                 "ordering": ["-created_at", "name"],
             },
         ),
         migrations.CreateModel(
-            name="Exercicio",
+            name="Exercise",
             fields=[
                 (
                     "id",
@@ -231,18 +231,18 @@ class Migration(migrations.Migration):
                     models.ForeignKey(
                         on_delete=django.db.models.deletion.PROTECT,
                         related_name="exercises",
-                        to="training.grupomuscular",
+                        to="training.musclegroup",
                     ),
                 ),
             ],
             options={
-                "verbose_name": "exercicio",
-                "verbose_name_plural": "exercicios",
+                "verbose_name": "exercise",
+                "verbose_name_plural": "exercises",
                 "ordering": ["name"],
             },
         ),
         migrations.CreateModel(
-            name="ItemFichaDeTreino",
+            name="WorkoutItem",
             fields=[
                 (
                     "id",
@@ -268,7 +268,7 @@ class Migration(migrations.Migration):
                     models.ForeignKey(
                         on_delete=django.db.models.deletion.PROTECT,
                         related_name="workout_items",
-                        to="training.exercicio",
+                        to="training.exercise",
                     ),
                 ),
                 (
@@ -276,27 +276,27 @@ class Migration(migrations.Migration):
                     models.ForeignKey(
                         on_delete=django.db.models.deletion.CASCADE,
                         related_name="items",
-                        to="training.fichadetreino",
+                        to="training.workoutplan",
                     ),
                 ),
             ],
             options={
-                "verbose_name": "item da ficha de treino",
-                "verbose_name_plural": "itens da ficha de treino",
+                "verbose_name": "workout item",
+                "verbose_name_plural": "workout items",
                 "ordering": ["workout_plan", "order", "id"],
             },
         ),
         migrations.AddField(
-            model_name="fichadetreino",
+            model_name="workoutplan",
             name="exercises",
             field=models.ManyToManyField(
                 related_name="workout_plans",
-                through="training.ItemFichaDeTreino",
-                to="training.exercicio",
+                through="training.WorkoutItem",
+                to="training.exercise",
             ),
         ),
         migrations.AddConstraint(
-            model_name="itemfichadetreino",
+            model_name="workoutitem",
             constraint=models.UniqueConstraint(
                 fields=("workout_plan", "order"), name="unique_workout_item_order"
             ),
